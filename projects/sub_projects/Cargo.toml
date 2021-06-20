@@ -1,0 +1,21 @@
+[package]
+name = "sub_projects"
+publish = false
+version = "0.0.0"
+authors = ["Aster <192607617@qq.com>"]
+description = "..."
+repository = "..."
+readme = "Readme.md"
+license = "MPL-2.0"
+edition = "2021"
+
+[dependencies]
+
+[dev-dependencies]
+
+[features]
+default = []
+
+[package.metadata.wee]
+t = "cargo test"
+p = "cargo publish --allow-dirty"
