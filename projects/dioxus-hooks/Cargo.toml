@@ -1,7 +1,6 @@
 [package]
-name = "sub_projects"
-publish = false
-version = "0.0.0"
+name = "dioxus-hooks"
+version = "0.1.0"
 authors = ["Aster <192607617@qq.com>"]
 description = "..."
 repository = "..."
@@ -10,6 +9,13 @@ license = "MPL-2.0"
 edition = "2021"
 
 [dependencies]
+dioxus = "0.1.8"
+gloo-events = "0.1.1"
+
+[dependencies.web-sys]
+version = "0.3.56"
+features = ["Window", "UiEvent"]
+
 
 [dev-dependencies]
 
