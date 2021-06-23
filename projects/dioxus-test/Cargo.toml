@@ -10,8 +10,9 @@ license = "MPL-2.0"
 edition = "2021"
 
 [dependencies]
-dioxus = "0.1.8"
+dioxus = { version = "0.1.8", features = ["desktop"] }
 dioxus-hooks = {version="*", path = "../dioxus-hooks"}
+wasm-logger = "0.2.0"
 
 [dev-dependencies]
 

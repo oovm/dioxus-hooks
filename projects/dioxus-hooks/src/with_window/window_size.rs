@@ -1,7 +1,12 @@
+use log::debug;
 use super::*;
 
 
-
+pub struct OnWindowResize {
+    x: f64,
+    y: f64,
+    listener: Option<EventListener>,
+}
 
 impl Default for OnWindowResize {
     fn default() -> Self {
@@ -22,6 +27,7 @@ impl OnWindowResize {
                 resize.x = size.0;
                 resize.y = size.1;
             });
+            debug!("{:?}", Self::get_size())
         });
         resize.listener = Some(listener);
         Some(resize)
@@ -34,12 +40,15 @@ impl OnWindowResize {
     }
 }
 
-impl WindowSize {
+impl<'a> WindowSize<'a> {
     pub fn width(&self) -> usize {
         self.inner.get().x as _
     }
     pub fn height(&self) -> usize {
         self.inner.get().x as _
+    }
+    pub fn force_update(&self)  {
+
     }
 }
 
