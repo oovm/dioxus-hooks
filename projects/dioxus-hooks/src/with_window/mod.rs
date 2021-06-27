@@ -1,6 +1,7 @@
 mod window_size;
 mod display;
 
+use std::fmt::{Display, Formatter};
 use dioxus::core::{ScopeState};
 use dioxus::hooks::{use_state, UseState};
 use gloo_events::EventListener;
@@ -38,9 +39,6 @@ pub fn use_height(cx: &ScopeState) -> WindowHeight {
     }
 }
 
-pub fn use_window_layout<T>(cx: &ScopeState) -> T {
-    todo!()
-}
 
 
 

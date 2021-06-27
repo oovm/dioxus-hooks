@@ -41,14 +41,44 @@ impl OnWindowResize {
 }
 
 impl<'a> WindowSize<'a> {
+    #[inline]
     pub fn width(&self) -> usize {
         self.inner.get().x as _
     }
+    #[inline]
     pub fn height(&self) -> usize {
         self.inner.get().x as _
     }
-    pub fn force_update(&self)  {
-
+    #[inline]
+    pub fn layout<T>(&self) -> T where T: From<usize> {
+        self.width().into()
+    }
+    pub fn as_width(&self) -> WindowWidth {
+        WindowWidth {
+            inner: self.inner
+        }
+    }
+    pub fn as_height(&self) -> WindowHeight {
+        WindowHeight {
+            inner: self.inner
+        }
     }
 }
 
+impl<'a> WindowWidth<'a> {
+    #[inline]
+    pub fn get(&self) -> usize {
+        self.inner.get().x as _
+    }
+    #[inline]
+    pub fn layout<T>(&self) -> T where T: From<usize> {
+        self.get().into()
+    }
+}
+
+impl<'a> WindowHeight<'a> {
+    #[inline]
+    pub fn get(&self) -> usize {
+        self.inner.get().y as _
+    }
+}
