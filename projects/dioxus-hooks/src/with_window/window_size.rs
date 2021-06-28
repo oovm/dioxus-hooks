@@ -1,6 +1,5 @@
-use log::debug;
 use super::*;
-
+use log::debug;
 
 pub struct OnWindowResize {
     x: f64,
@@ -10,11 +9,7 @@ pub struct OnWindowResize {
 
 impl Default for OnWindowResize {
     fn default() -> Self {
-        Self {
-            x: 0.0,
-            y: 0.0,
-            listener: None,
-        }
+        Self { x: 0.0, y: 0.0, listener: None }
     }
 }
 
@@ -50,18 +45,26 @@ impl<'a> WindowSize<'a> {
         self.inner.get().x as _
     }
     #[inline]
-    pub fn layout<T>(&self) -> T where T: From<usize> {
+    pub fn layout<T>(&self) -> T
+    where
+        T: From<usize>,
+    {
         self.width().into()
     }
     pub fn as_width(&self) -> WindowWidth {
-        WindowWidth {
-            inner: self.inner
-        }
+        WindowWidth { inner: self.inner }
     }
     pub fn as_height(&self) -> WindowHeight {
-        WindowHeight {
-            inner: self.inner
-        }
+        WindowHeight { inner: self.inner }
+    }
+}
+
+impl<'a, T> WindowLayout<'a, T>
+where
+    T: From<usize>,
+{
+    pub fn get(&self) -> T {
+        T::from(self.inner.get().x as usize)
     }
 }
 
@@ -71,7 +74,10 @@ impl<'a> WindowWidth<'a> {
         self.inner.get().x as _
     }
     #[inline]
-    pub fn layout<T>(&self) -> T where T: From<usize> {
+    pub fn layout<T>(&self) -> T
+    where
+        T: From<usize>,
+    {
         self.get().into()
     }
 }
