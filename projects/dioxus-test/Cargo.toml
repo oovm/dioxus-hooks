@@ -12,7 +12,7 @@ edition = "2021"
 [dependencies]
 #dioxus = { version = "0.1.8", features = ["desktop"] }
 dioxus = { version = "0.1.8", features = ["web"] }
-dioxus-hooks = {version="*", path = "../dioxus-hooks"}
+dioxus-hooks = { version = "*", path = "../dioxus-hooks" }
 wasm-logger = "0.2.0"
 
 [dev-dependencies]

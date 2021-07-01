@@ -1,59 +1,48 @@
 mod display;
 mod window_size;
 
-pub use self::window_size::OnWindowResize;
-
-use dioxus::{
-    core::ScopeState,
-    hooks::{use_state, UseState},
-};
+use dioxus::core::ScopeState;
 use gloo_events::EventListener;
 use std::{
     fmt::{Display, Formatter},
     marker::PhantomData,
 };
-use std::cell::RefCell;
-use std::rc::Rc;
 use web_sys::window;
 
-
-pub struct WindowSize<'a> {
-    inner: OnWindowResize<'a>,
+pub struct WindowSize {
+    x: f64,
+    y: f64,
+    listener: Option<EventListener>,
 }
 
 pub fn use_window_size(cx: &ScopeState) -> WindowSize {
-    WindowSize {
-        inner: OnWindowResize::new(&cx).unwrap()
-    }
+    WindowSize::new(&cx).unwrap()
 }
 
-pub struct WindowLayout<'a, T> {
-    inner: OnWindowResize<'a>,
+pub struct WindowLayout<T> {
+    inner: WindowSize,
     bound: PhantomData<T>,
 }
 
 pub fn use_window_layout<T>(cx: &ScopeState) -> WindowLayout<T>
-    where
-        T: From<usize>,
+where
+    T: From<usize>,
 {
-    WindowLayout {
-        inner: OnWindowResize::new(cx).unwrap(),
-        bound: Default::default(),
-    }
+    WindowLayout { inner: WindowSize::new(cx).unwrap(), bound: Default::default() }
 }
 
-pub struct WindowWidth<'a> {
-    inner: OnWindowResize<'a>,
+pub struct WindowWidth {
+    inner: WindowSize,
 }
 
 pub fn use_width(cx: &ScopeState) -> WindowWidth {
-    WindowWidth { inner: OnWindowResize::new(cx).unwrap() }
+    WindowWidth { inner: WindowSize::new(cx).unwrap() }
 }
 
-pub struct WindowHeight<'a> {
-    inner: OnWindowResize<'a>,
+pub struct WindowHeight {
+    inner: WindowSize,
 }
 
 pub fn use_height(cx: &ScopeState) -> WindowHeight {
-    WindowHeight { inner: OnWindowResize::new(cx).unwrap() }
+    WindowHeight { inner: WindowSize::new(cx).unwrap() }
 }

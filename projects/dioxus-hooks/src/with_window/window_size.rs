@@ -1,39 +1,29 @@
-use dioxus::core::exports::futures_channel::mpsc::{unbounded, UnboundedReceiver};
-use dioxus::core::SchedulerMsg;
 use super::*;
 use log::debug;
 
-pub struct OnWindowResize<'a> {
-    x: f64,
-    y: f64,
-    listener: Option<EventListener>,
-    cx: &'a ScopeState
-    // receiver: UnboundedReceiver<SchedulerMsg>,
+impl Default for WindowSize {
+    fn default() -> Self {
+        Self { x: 0.0, y: 0.0, listener: None }
+    }
 }
 
-impl<'a> OnWindowResize<'a> {
-    pub fn new(cx: &'a ScopeState) -> Option<Self> {
-        // let (sender, receiver) = unbounded();
-        // let id = cx.scope_id();
+impl WindowSize {
+    pub(crate) fn new(cx: &ScopeState) -> Option<Self> {
+        debug!("Windows Resize Listener");
         let window = window()?;
         let regenerate = cx.schedule_update();
-        let mut resize = OnWindowResize {
-            x: 0.0,
-            y: 0.0,
-            listener: None,
-
-            cx
-        };
+        let mut hook = WindowSize { x: 0.0, y: 0.0, listener: None };
         let listener = EventListener::new(&window, "resize", move |_| {
-            Self::get_size().map(|size| {
-                resize.x = size.0;
-                resize.y = size.1;
-                regenerate()
-                // sender.unbounded_send(SchedulerMsg::Immediate(id)).ok()
-            });
+            if let Some(size) = Self::get_size() {
+                hook.x = size.0;
+                hook.y = size.1;
+                // hook.updater();
+                regenerate();
+                debug!("Windows Resize Event: {:?}", size)
+            }
         });
-        resize.listener = Some(listener);
-        Some(resize)
+        hook.listener = Some(listener);
+        Some(hook)
     }
     pub fn get_size() -> Option<(f64, f64)> {
         let window = window()?;
@@ -41,67 +31,76 @@ impl<'a> OnWindowResize<'a> {
         let y = window.inner_height().ok()?.as_f64()?;
         Some((x, y))
     }
+    pub fn set_window_width() -> Option<()> {
+        todo!()
+        // let window = window()?.set_inner_width();
+    }
+    pub fn set_window_height() -> Option<()> {
+        todo!()
+        // let window = window()?.set_inner_width();
+    }
 }
 
-impl<'a> WindowSize<'a> {
+impl WindowSize {
     #[inline]
     pub fn width(&self) -> usize {
-        self.inner.x as _
+        self.x as _
     }
     #[inline]
     pub fn height(&self) -> usize {
-        self.inner.x as _
+        self.x as _
     }
     #[inline]
     pub fn layout<T>(&self) -> T
-        where
-            T: From<usize>,
+    where
+        T: From<usize>,
     {
         self.width().into()
     }
-    pub fn as_width(self) -> WindowWidth<'a> {
-        WindowWidth { inner: self.inner }
+    pub fn as_width(self) -> WindowWidth {
+        WindowWidth { inner: self }
     }
-    pub fn as_height(self) -> WindowHeight<'a> {
-        WindowHeight { inner: self.inner }
+    pub fn as_height(self) -> WindowHeight {
+        WindowHeight { inner: self }
     }
-    pub fn as_layout<T>(self) -> WindowLayout<'a ,T> {
-        WindowLayout { inner: self.inner, bound: Default::default() }
+    pub fn as_layout<T>(self) -> WindowLayout<T> {
+        WindowLayout { inner: self, bound: Default::default() }
     }
 }
 
-impl<'a, T> WindowLayout<'a, T>
-    where
-        T: From<usize>,
+impl<T> WindowLayout<T>
+where
+    T: From<usize>,
 {
     pub fn get(&self) -> T {
-        T::from(self.inner.x as usize)
+        self.inner.layout()
+        // T::from(self.inner.x as usize)
     }
 }
 
-impl<'a> WindowWidth<'a> {
+impl WindowWidth {
     #[inline]
     pub fn get(&self) -> usize {
-        self.inner.x as _
+        self.inner.width()
     }
-    pub fn set(&self, width: usize) -> bool {
-        false
+    pub fn set(&self, _width: usize) -> bool {
+        WindowSize::set_window_width().is_some()
     }
     #[inline]
     pub fn layout<T>(&self) -> T
-        where
-            T: From<usize>,
+    where
+        T: From<usize>,
     {
-        self.get().into()
+        self.inner.layout()
     }
 }
 
-impl<'a> WindowHeight<'a> {
+impl WindowHeight {
     #[inline]
     pub fn get(&self) -> usize {
-        self.inner.y as _
+        self.inner.height()
     }
-    pub fn set(&self, height: usize) -> bool {
-        false
+    pub fn set(&self, _height: usize) -> bool {
+        WindowSize::set_window_height().is_some()
     }
 }

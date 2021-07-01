@@ -1,12 +1,12 @@
 use super::*;
 
-impl<'a> Display for WindowSize<'a> {
+impl Display for WindowSize {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         f.debug_tuple("").field(&self.width()).field(&self.height()).finish()
     }
 }
 
-impl<'a, T> Display for WindowLayout<'a, T>
+impl<T> Display for WindowLayout<T>
 where
     T: Display,
     T: From<usize>,
@@ -16,13 +16,13 @@ where
     }
 }
 
-impl<'a> Display for WindowWidth<'a> {
+impl Display for WindowWidth {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         Display::fmt(&self.get(), f)
     }
 }
 
-impl<'a> Display for WindowHeight<'a> {
+impl Display for WindowHeight {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         Display::fmt(&self.get(), f)
     }
