@@ -17,8 +17,8 @@ use std::rc::Rc;
 use web_sys::window;
 
 
-pub struct WindowSize {
-    inner: OnWindowResize,
+pub struct WindowSize<'a> {
+    inner: OnWindowResize<'a>,
 }
 
 pub fn use_window_size(cx: &ScopeState) -> WindowSize {
@@ -28,7 +28,7 @@ pub fn use_window_size(cx: &ScopeState) -> WindowSize {
 }
 
 pub struct WindowLayout<'a, T> {
-    inner: &'a OnWindowResize,
+    inner: OnWindowResize<'a>,
     bound: PhantomData<T>,
 }
 
@@ -37,23 +37,23 @@ pub fn use_window_layout<T>(cx: &ScopeState) -> WindowLayout<T>
         T: From<usize>,
 {
     WindowLayout {
-        inner: &OnWindowResize::new(cx).unwrap(),
+        inner: OnWindowResize::new(cx).unwrap(),
         bound: Default::default(),
     }
 }
 
 pub struct WindowWidth<'a> {
-    inner: &'a OnWindowResize,
+    inner: OnWindowResize<'a>,
 }
 
 pub fn use_width(cx: &ScopeState) -> WindowWidth {
-    WindowWidth { inner: &OnWindowResize::new(cx).unwrap() }
+    WindowWidth { inner: OnWindowResize::new(cx).unwrap() }
 }
 
 pub struct WindowHeight<'a> {
-    inner: &'a OnWindowResize,
+    inner: OnWindowResize<'a>,
 }
 
 pub fn use_height(cx: &ScopeState) -> WindowHeight {
-    WindowHeight { inner: &OnWindowResize::new(cx).unwrap() }
+    WindowHeight { inner: OnWindowResize::new(cx).unwrap() }
 }

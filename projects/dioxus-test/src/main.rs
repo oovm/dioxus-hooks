@@ -14,9 +14,6 @@ fn main() {
 fn App(cx: Scope) -> Element {
     let size = use_window_size(&cx);
     let layout = use_window_layout::<LayoutSystem>(&cx);
-
-    let a = use_state(&cx, || 0).1.needs_update()
-
     cx.render(rsx!(
         h1 { "Window size: {size}" }
         h2 { "Current layout: {layout}" }

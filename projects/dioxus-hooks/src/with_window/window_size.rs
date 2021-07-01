@@ -3,29 +3,33 @@ use dioxus::core::SchedulerMsg;
 use super::*;
 use log::debug;
 
-pub struct OnWindowResize {
+pub struct OnWindowResize<'a> {
     x: f64,
     y: f64,
     listener: Option<EventListener>,
-    receiver: UnboundedReceiver<SchedulerMsg>,
+    cx: &'a ScopeState
+    // receiver: UnboundedReceiver<SchedulerMsg>,
 }
 
-impl OnWindowResize {
-    pub fn new(cx: &ScopeState) -> Option<Self> {
-        let (sender, receiver) = unbounded();
-        let id = cx.scope_id();
+impl<'a> OnWindowResize<'a> {
+    pub fn new(cx: &'a ScopeState) -> Option<Self> {
+        // let (sender, receiver) = unbounded();
+        // let id = cx.scope_id();
         let window = window()?;
+        let regenerate = cx.schedule_update();
         let mut resize = OnWindowResize {
             x: 0.0,
             y: 0.0,
             listener: None,
-            receiver,
+
+            cx
         };
         let listener = EventListener::new(&window, "resize", move |_| {
             Self::get_size().map(|size| {
                 resize.x = size.0;
                 resize.y = size.1;
-                sender.unbounded_send(SchedulerMsg::Immediate(id)).ok()
+                regenerate()
+                // sender.unbounded_send(SchedulerMsg::Immediate(id)).ok()
             });
         });
         resize.listener = Some(listener);
@@ -55,13 +59,13 @@ impl<'a> WindowSize<'a> {
     {
         self.width().into()
     }
-    pub fn as_width(&self) -> WindowWidth {
+    pub fn as_width(self) -> WindowWidth<'a> {
         WindowWidth { inner: self.inner }
     }
-    pub fn as_height(&self) -> WindowHeight {
+    pub fn as_height(self) -> WindowHeight<'a> {
         WindowHeight { inner: self.inner }
     }
-    pub fn as_layout<T>(&self) -> WindowLayout<T> {
+    pub fn as_layout<T>(self) -> WindowLayout<'a ,T> {
         WindowLayout { inner: self.inner, bound: Default::default() }
     }
 }
