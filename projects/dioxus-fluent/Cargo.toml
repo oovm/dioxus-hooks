@@ -1,0 +1,30 @@
+[package]
+name = "dioxus-fluent"
+version = "0.1.0"
+authors = ["Aster <192607617@qq.com>"]
+description = "..."
+repository = "https://github.com/oovm/dioxus-hooks"
+readme = "Readme.md"
+license = "MPL-2.0"
+edition = "2021"
+
+[dependencies]
+dioxus = "0.1.8"
+fluent = "0.16.0"
+gloo-events = "0.1.1"
+log = "0.4.14"
+#futures = "0.3.21"
+
+[dependencies.web-sys]
+version = "0.3.56"
+features = ["Window", "UiEvent"]
+
+
+[dev-dependencies]
+
+[features]
+default = []
+
+[package.metadata.wee]
+t = "cargo test"
+p = "cargo publish --allow-dirty"
