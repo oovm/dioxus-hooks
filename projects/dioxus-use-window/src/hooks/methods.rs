@@ -63,6 +63,11 @@ impl WindowSize {
     {
         self.width().into()
     }
+    /// get aspect radio of current window
+    #[inline]
+    pub fn aspect_radio(&self) -> f64 {
+        self.x / self.y
+    }
     /// using as [`WindowWidth`]
     #[inline]
     pub fn as_width(self) -> WindowWidth {

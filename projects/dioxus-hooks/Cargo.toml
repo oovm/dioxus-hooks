@@ -12,7 +12,7 @@ edition = "2021"
 dioxus = "0.1.8"
 gloo-events = "0.1.1"
 log = "0.4.14"
-dioxus-use-window = {version ="0.2.*", path = "../dioxus-use-window"}
+dioxus-use-window = {version ="0.4.*", path = "../dioxus-use-window"}
 #futures = "0.3.21"
 
 [dependencies.web-sys]

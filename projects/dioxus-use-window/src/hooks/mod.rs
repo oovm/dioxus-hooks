@@ -1,7 +1,6 @@
 #[deny(missing_doc_code_examples)]
-
 mod display;
-mod window_size;
+mod methods;
 
 use dioxus::core::ScopeState;
 use gloo_events::EventListener;
@@ -19,7 +18,15 @@ pub struct WindowSize {
     listener: Option<EventListener>,
 }
 
-
+/// hooks for window's size
+///
+/// # Arguments
+///
+/// * `cx`: [`Scope`] or [`ScopeState`]
+///
+/// returns: WindowSize
+///
+/// # Examples
 ///
 /// ```
 /// use dioxus::prelude::*;
@@ -37,38 +44,105 @@ pub fn use_window_size(cx: &ScopeState) -> WindowSize {
     WindowSize::new(&cx).unwrap()
 }
 
-/// Window size handler
+/// Window layout effect handler
 #[derive(Debug)]
 pub struct WindowLayout<T> {
     inner: WindowSize,
     bound: PhantomData<T>,
 }
 
-/// hook of
+
+/// hooks for window's layout
+///
+/// # Arguments
+///
+/// * `cx`: [`Scope`] or [`ScopeState`]
+///
+/// returns: WindowLayout<T>
+///
+/// # Examples
+///
+/// ```
+/// use dioxus::prelude::*;
+/// use dioxus_use_window::use_window_layout;
+///
+/// fn App(cx: Scope) -> Element {
+///     let layout = use_window_layout(&cx);
+///
+///     cx.render(rsx!(
+///         h1 { "Window layout: {layout}" }
+///     ))
+/// }
+/// ```
 pub fn use_window_layout<T>(cx: &ScopeState) -> WindowLayout<T>
-where
-    T: From<usize>,
+    where
+        T: From<usize>,
 {
     WindowLayout { inner: WindowSize::new(cx).unwrap(), bound: Default::default() }
 }
 
-/// w
-#[derive(Debug)]pub struct WindowWidth {
+/// Window width effect handler
+#[derive(Debug)]
+pub struct WindowWidth {
     inner: WindowSize,
 }
 
-/// hook
+
+/// hooks for window's width
+///
+/// # Arguments
+///
+/// * `cx`: [`Scope`] or [`ScopeState`]
+///
+/// returns: [`WindowWidth`]
+///
+/// # Examples
+///
+/// ```
+/// use dioxus::prelude::*;
+/// use dioxus_use_window::use_width;
+///
+/// fn App(cx: Scope) -> Element {
+///     let width = use_width(&cx);
+///
+///     cx.render(rsx!(
+///         h1 { "Window width: {width}" }
+///     ))
+/// }
+/// ```
 pub fn use_width(cx: &ScopeState) -> WindowWidth {
     WindowWidth { inner: WindowSize::new(cx).unwrap() }
 }
 
-/// hook
-#[derive(Debug)]pub struct WindowHeight {
+/// Window height effect handler
+#[derive(Debug)]
+pub struct WindowHeight {
     inner: WindowSize,
 }
 
 
-/// hook of
+/// hooks for window's height
+///
+/// # Arguments
+///
+/// * `cx`: [`Scope`] or [`ScopeState`]
+///
+/// returns: [`WindowHeight`]
+///
+/// # Examples
+///
+/// ```
+/// use dioxus::prelude::*;
+/// use dioxus_use_window::use_height;
+///
+/// fn App(cx: Scope) -> Element {
+///     let heigh = use_height(&cx);
+///
+///     cx.render(rsx!(
+///         h1 { "Window height: {heigh}" }
+///     ))
+/// }
+/// ```
 pub fn use_height(cx: &ScopeState) -> WindowHeight {
     WindowHeight { inner: WindowSize::new(cx).unwrap() }
 }
