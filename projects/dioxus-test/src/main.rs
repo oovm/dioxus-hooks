@@ -3,7 +3,7 @@
 mod layout;
 use self::layout::LayoutSystem;
 use dioxus::prelude::*;
-use dioxus_hooks::{use_window_layout, use_window_size, WindowSize};
+use dioxus_hooks_plus::{use_window_layout, use_window_size, WindowSize};
 
 fn main() {
     wasm_logger::init(wasm_logger::Config::default());

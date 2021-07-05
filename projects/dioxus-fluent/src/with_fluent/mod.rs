@@ -1,7 +1,10 @@
+use std::borrow::Cow;
 use std::ops::Deref;
-use dioxus::hooks::UseState;
+use dioxus::core::ScopeState;
+use dioxus::hooks::{use_context, use_context_provider, UseState};
 use dioxus::prelude::UseSharedState;
 use fluent::{FluentBundle, FluentValue, FluentResource, FluentArgs};
+use log::warn;
 
 // Used to provide a locale for the bundle.
 use unic_langid::LanguageIdentifier;
@@ -10,23 +13,30 @@ use unic_langid::LanguageIdentifier;
 pub struct FluentContext {
     res: FluentResource,
 }
-pub struct UseFluent<'a, I> {
-    bundle : &'a UseState<FluentBundle<I>>
+
+pub struct UseFluent<'a> {
+    bundle: &'a UseState<FluentBundle<FluentResource>>,
 }
 
-impl UseFluent<I> {
-    pub fn new(res: &FluentResource, locales: Vec<LanguageIdentifier>) {
+impl FluentContext {
+    pub fn new(cx: &ScopeState) {
+        use_context_provider(cx, Self::provider())
+    }
+    fn provider() -> FluentBundle<FluentResource> {}
+}
 
-        let res = FluentResource::try_new(ftl_string)
-            .expect("Failed to parse an FTL string.");
+impl UseFluent {
+    pub fn new(cx: &ScopeState, res: &FluentResource, locales: Vec<LanguageIdentifier>) -> Option<Self> {
+        let ctx = use_context::<FluentBundle<FluentResource>>(cx)?;
 
+        Self {
+            bundle: &ctx
+        }
 
-        let langid_en: LanguageIdentifier = "en-US".parse().expect("Parsing failed");
+        let res = FluentResource::try_new(ftl_string)?;
+        let langid_en: LanguageIdentifier = "en-US".parse()?;
         let mut bundle = FluentBundle::new(vec![langid_en]);
-
-        bundle
-            .add_resource(res)
-            .expect("Failed to add FTL resources to the bundle.");
+        bundle.add_resource(res)?;
     }
 }
 
@@ -39,30 +49,26 @@ impl UseFluent<I> {
 // }
 
 
-impl<'a, I>  UseFluent<'a, I> {
-    pub fn get_message() {
-        let msg = bundle.get_message("hello-world")
-            .expect("Message doesn't exist.");
-
-
-
-
+impl<'a> UseFluent<'a> {
+    pub fn get_message(&self, id: &str) -> Option<Cow<str>> {
+        let bundle = self.bundle.get();
         let mut errors = vec![];
-        let pattern = msg.value()
-            .expect("Message has no value.");
-        let value = bundle.format_pattern(&pattern, None, &mut errors);
-
-        assert_eq!(&value, "Hello, world!");
+        let msg = bundle.get_message(id)?;
+        let value = bundle.format_pattern(msg.value()?, None, &mut errors);
+        for e in errors {
+            warn!("{}", e);
+        }
+        Some(value)
     }
-    pub fn get_format() {
-        let mut args = FluentArgs::new();
-        args.set("name", FluentValue::from("John"));
-
-        let msg = bundle.get_message("intro")
-            .expect("Message doesn't exist.");
+    pub fn get_format(&self, id: &str, args: FluentArgs) -> Option<Cow<str>> {
+        let bundle = self.bundle.get();
         let mut errors = vec![];
-        let pattern = msg.value().expect("Message has no value.");
-        let value = bundle.format_pattern(&pattern, Some(&args), &mut errors);
+        let msg = bundle.get_message(id)?;
+        let value = bundle.format_pattern(msg.value()?, Some(&args), &mut errors);
+        for e in errors {
+            warn!("{}", e);
+        }
+        Some(value)
     }
 }
 
@@ -87,22 +93,12 @@ intro = Welcome, { $name }.
     let bundle = use_fluent();
 
 
-
-
-
-
-
 // The FSI/PDI isolation marks ensure that the direction of
 // the text from the variable is not affected by the translation.
     assert_eq!(value, "Welcome, \u{2068}John\u{2069}.");
 }
 
 
+pub fn use_fluent() -> UseFluent<I> {}
 
-pub fn use_fluent() -> UseFluent<I> {
-
-}
-
-pub fn use_fluent_id() -> UseFluent<I> {
-
-}
+pub fn use_fluent_id() -> UseFluent<I> {}
