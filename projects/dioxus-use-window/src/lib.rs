@@ -1,4 +1,10 @@
-#[doc = include_str!("../")]
-mod with_window;
+#[deny(missing_docs)]
+#[deny(missing_debug_implementations)]
+#[deny(missing_copy_implementations)]
 
-pub use with_window::*;
+#[doc = include_str!("../Readme.md")]
+mod hooks;
+mod layouts;
+
+pub use hooks::*;
+pub use layouts::*;

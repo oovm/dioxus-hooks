@@ -4,7 +4,6 @@ mod with_keyboard;
 mod with_clipboard;
 
 pub use with_cursor::*;
-pub use with_window::*;
 pub use with_measure::*;
 
-pub use dioxus_use_window as use_window;
+pub use dioxus_use_window::*;

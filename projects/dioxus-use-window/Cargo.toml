@@ -1,9 +1,10 @@
 [package]
 name = "dioxus-use-window"
-version = "0.1.0"
+version = "0.2.1"
 authors = ["Aster <192607617@qq.com>"]
-description = "..."
+description = "`use_window` hooks for dioxus"
 repository = "https://github.com/oovm/dioxus-hooks"
+documentation = "https://docs.rs/dioxus-use-window"
 readme = "Readme.md"
 license = "MPL-2.0"
 edition = "2021"
