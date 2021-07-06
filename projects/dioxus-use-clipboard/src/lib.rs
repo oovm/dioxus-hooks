@@ -1,9 +1,8 @@
-mod with_cursor;
-mod with_window;
-mod with_measure;
-mod with_keyboard;
-mod with_clipboard;
+#![deny(missing_docs)]
+#![deny(missing_debug_implementations)]
+#![deny(missing_copy_implementations)]
+#![doc = include_str!("../Readme.md")]
 
-pub use with_cursor::*;
-pub use with_window::*;
-pub use with_measure::*;
+mod hooks;
+
+pub use hooks::*;

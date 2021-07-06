@@ -10,6 +10,9 @@ use std::{
 };
 use web_sys::window;
 
+const MISSING_W: f64 = 375.0;
+const MISSING_H: f64 = 812.0;
+
 /// Window size effect handler
 #[derive(Debug)]
 pub struct WindowSize {
@@ -24,7 +27,7 @@ pub struct WindowSize {
 ///
 /// * `cx`: [`Scope`] or [`ScopeState`]
 ///
-/// returns: WindowSize
+/// returns: [`WindowSize`]
 ///
 /// # Examples
 ///
@@ -41,7 +44,7 @@ pub struct WindowSize {
 /// }
 /// ```
 pub fn use_window_size(cx: &ScopeState) -> WindowSize {
-    WindowSize::new(&cx).unwrap()
+    WindowSize::new(&cx, MISSING_W, MISSING_H).unwrap_or_default()
 }
 
 /// Window layout effect handler
@@ -51,14 +54,13 @@ pub struct WindowLayout<T> {
     bound: PhantomData<T>,
 }
 
-
 /// hooks for window's layout
 ///
 /// # Arguments
 ///
 /// * `cx`: [`Scope`] or [`ScopeState`]
 ///
-/// returns: WindowLayout<T>
+/// returns: [`WindowLayout`]
 ///
 /// # Examples
 ///
@@ -75,10 +77,10 @@ pub struct WindowLayout<T> {
 /// }
 /// ```
 pub fn use_window_layout<T>(cx: &ScopeState) -> WindowLayout<T>
-    where
-        T: From<usize>,
+where
+    T: From<usize>,
 {
-    WindowLayout { inner: WindowSize::new(cx).unwrap(), bound: Default::default() }
+    WindowLayout { inner: WindowSize::new(cx, MISSING_W, MISSING_H).unwrap_or_default(), bound: Default::default() }
 }
 
 /// Window width effect handler
@@ -86,7 +88,6 @@ pub fn use_window_layout<T>(cx: &ScopeState) -> WindowLayout<T>
 pub struct WindowWidth {
     inner: WindowSize,
 }
-
 
 /// hooks for window's width
 ///
@@ -111,7 +112,7 @@ pub struct WindowWidth {
 /// }
 /// ```
 pub fn use_width(cx: &ScopeState) -> WindowWidth {
-    WindowWidth { inner: WindowSize::new(cx).unwrap() }
+    WindowWidth { inner: WindowSize::new(cx, MISSING_W, MISSING_H).unwrap_or_default() }
 }
 
 /// Window height effect handler
@@ -119,7 +120,6 @@ pub fn use_width(cx: &ScopeState) -> WindowWidth {
 pub struct WindowHeight {
     inner: WindowSize,
 }
-
 
 /// hooks for window's height
 ///
@@ -136,13 +136,13 @@ pub struct WindowHeight {
 /// use dioxus_use_window::use_height;
 ///
 /// fn App(cx: Scope) -> Element {
-///     let heigh = use_height(&cx);
+///     let height = use_height(&cx);
 ///
 ///     cx.render(rsx!(
-///         h1 { "Window height: {heigh}" }
+///         h1 { "Window height: {height}" }
 ///     ))
 /// }
 /// ```
 pub fn use_height(cx: &ScopeState) -> WindowHeight {
-    WindowHeight { inner: WindowSize::new(cx).unwrap() }
+    WindowHeight { inner: WindowSize::new(cx, MISSING_W, MISSING_H).unwrap_or_default() }
 }

@@ -1,17 +1,26 @@
 [package]
-name = "dioxus-hooks-plus"
-version = "0.1.1"
+name = "dioxus-use-cursor"
+version = "0.1.0"
 authors = ["Aster <192607617@qq.com>"]
-description = "Additional hooks for dioxus"
+description = "`use_clipboard` hooks for dioxus"
 repository = "https://github.com/oovm/dioxus-hooks"
-documentation = "https://docs.rs/dioxus-hooks-plus"
+documentation = "https://docs.rs/dioxus-use-cursor"
 readme = "Readme.md"
 license = "MPL-2.0"
 edition = "2021"
 
 [dependencies]
+dioxus = "0.1.8"
+gloo-events = "0.1.1"
+log = "0.4.14"
 dioxus-use-window = {version ="0.4.*", path = "../dioxus-use-window"}
 dioxus-use-clipboard = {version ="0.1.*", path = "../dioxus-use-clipboard"}
+#futures = "0.3.21"
+
+[dependencies.web-sys]
+version = "0.3.56"
+features = ["Window", "UiEvent"]
+
 
 [dev-dependencies]
 

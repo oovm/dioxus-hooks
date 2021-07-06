@@ -1,6 +1,8 @@
-use std::fmt::{Debug, Display, Formatter};
-use std::num::ParseIntError;
-use std::str::FromStr;
+use std::{
+    fmt::{Debug, Display, Formatter},
+    num::ParseIntError,
+    str::FromStr,
+};
 
 /// Responsive layout system for mainstream screen
 ///
@@ -12,7 +14,6 @@ use std::str::FromStr;
 /// For 2K screen, which has a `2560px × 1440px @ 1.5x` screen, the actual size is `1706epx × 960epx`.
 ///
 /// For 4K screen, which has a `4096px × 2160px @ 2x` screen, the actual size is `2048epx × 1024epx`.
-///
 #[derive(Debug, Copy, Clone)]
 pub enum ResponsiveLayout {
     /// `width ⩽ 375epx`
@@ -80,13 +81,13 @@ impl FromStr for ResponsiveLayout {
     #[inline]
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let out = match s.to_ascii_lowercase().as_str() {
-            "t" | "xs" | "tiny" => { Self::Tiny }
-            "s" | "sm" | "small" => { Self::Small }
-            "m" | "md" | "medium" => { Self::Medium }
-            "l" | "lg" | "large" => { Self::Large }
-            "x" | "xl" | "extra" => { Self::ExtraLarge }
-            "u" | "ul" | "xxl" | "2xl" | "ultra" => { Self::UltraLarge }
-            s => { Self::from(s.parse::<usize>()?) }
+            "t" | "xs" | "tiny" => Self::Tiny,
+            "s" | "sm" | "small" => Self::Small,
+            "m" | "md" | "medium" => Self::Medium,
+            "l" | "lg" | "large" => Self::Large,
+            "x" | "xl" | "extra" => Self::ExtraLarge,
+            "u" | "ul" | "xxl" | "2xl" | "ultra" => Self::UltraLarge,
+            s => Self::from(s.parse::<usize>()?),
         };
         Ok(out)
     }

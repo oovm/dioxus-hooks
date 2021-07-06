@@ -2,8 +2,9 @@
 name = "dioxus-use-clipboard"
 version = "0.1.0"
 authors = ["Aster <192607617@qq.com>"]
-description = "..."
+description = "`use_clipboard` hooks for dioxus"
 repository = "https://github.com/oovm/dioxus-hooks"
+documentation = "https://docs.rs/dioxus-use-clipboard"
 readme = "Readme.md"
 license = "MPL-2.0"
 edition = "2021"
@@ -16,7 +17,7 @@ log = "0.4.14"
 
 [dependencies.web-sys]
 version = "0.3.56"
-features = ["Window", "UiEvent"]
+features = ["Window", "Clipboard"]
 
 
 [dev-dependencies]

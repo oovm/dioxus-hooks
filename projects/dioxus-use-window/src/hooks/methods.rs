@@ -1,25 +1,33 @@
 use super::*;
 use log::debug;
+use wasm_bindgen::JsValue;
 
 impl Default for WindowSize {
     fn default() -> Self {
-        Self { x: 0.0, y: 0.0, listener: None }
+        // used for ssr
+        Self { x: MISSING_W, y: MISSING_H, listener: None }
     }
 }
 
 impl WindowSize {
-    pub(crate) fn new(cx: &ScopeState) -> Option<Self> {
-        debug!("Windows Resize Listener");
+    /// builder of [`WindowSize`]
+    pub fn new(cx: &ScopeState, x: f64, y: f64) -> Option<Self> {
+        #[cfg(debug_assertions)]
+        {
+            debug!("Windows Resize Listener");
+        }
         let window = window()?;
         let regenerate = cx.schedule_update();
-        let mut hook = WindowSize { x: 0.0, y: 0.0, listener: None };
+        let mut hook = WindowSize { x, y, listener: None };
         let listener = EventListener::new(&window, "resize", move |_| {
             if let Some(size) = Self::get_size() {
                 hook.x = size.0;
                 hook.y = size.1;
-                // hook.updater();
                 regenerate();
-                debug!("Windows Resize Event: {:?}", size)
+                #[cfg(debug_assertions)]
+                {
+                    debug!("Windows Resize Event: {:?}", size);
+                }
             }
         });
         hook.listener = Some(listener);
@@ -33,14 +41,12 @@ impl WindowSize {
         Some((x, y))
     }
     /// set width of the current window, return `None` if failed to run
-    pub fn set_window_width(_input: usize) -> Option<()> {
-        todo!()
-        // let window = window()?.set_inner_width();
+    pub fn set_window_width(input: usize) -> Option<()> {
+        window()?.set_inner_width(&JsValue::from(input)).ok()
     }
     /// set height of the current window, return `None` if failed to run
-    pub fn set_window_height(_input: usize) -> Option<()> {
-        todo!()
-        // let window = window()?.set_inner_width();
+    pub fn set_window_height(input: usize) -> Option<()> {
+        window()?.set_inner_width(&JsValue::from(input)).ok()
     }
 }
 
@@ -58,8 +64,8 @@ impl WindowSize {
     /// get layout of current window
     #[inline]
     pub fn layout<T>(&self) -> T
-        where
-            T: From<usize>,
+    where
+        T: From<usize>,
     {
         self.width().into()
     }
@@ -86,8 +92,8 @@ impl WindowSize {
 }
 
 impl<T> WindowLayout<T>
-    where
-        T: From<usize>,
+where
+    T: From<usize>,
 {
     /// get layout of current window
     pub fn get(&self) -> T {
@@ -109,8 +115,8 @@ impl WindowWidth {
     /// get layout of current window, return `false` if failed to run
     #[inline]
     pub fn layout<T>(&self) -> T
-        where
-            T: From<usize>,
+    where
+        T: From<usize>,
     {
         self.inner.layout()
     }
