@@ -13,13 +13,11 @@ edition = "2021"
 dioxus = "0.1.8"
 gloo-events = "0.1.1"
 log = "0.4.14"
-dioxus-use-window = {version ="0.4.*", path = "../dioxus-use-window"}
-dioxus-use-clipboard = {version ="0.1.*", path = "../dioxus-use-clipboard"}
-#futures = "0.3.21"
+wasm-bindgen = "0.2.79"
 
 [dependencies.web-sys]
 version = "0.3.56"
-features = ["Window", "UiEvent"]
+features = ["Window", "UiEvent", "MouseEvent"]
 
 
 [dev-dependencies]

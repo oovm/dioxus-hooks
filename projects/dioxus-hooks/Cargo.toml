@@ -11,12 +11,14 @@ edition = "2021"
 
 [dependencies]
 dioxus-use-window = {version ="0.4.*", path = "../dioxus-use-window"}
-dioxus-use-clipboard = {version ="0.1.*", path = "../dioxus-use-clipboard"}
+dioxus-use-clipboard = {version ="0.1.*", path = "../dioxus-use-clipboard", optional = true}
+dioxus-use-cursor = {version ="0.1.*", path = "../dioxus-use-cursor"}
 
 [dev-dependencies]
 
 [features]
 default = []
+unstable = ["dioxus-use-clipboard"]
 
 [package.metadata.wee]
 t = "cargo test"

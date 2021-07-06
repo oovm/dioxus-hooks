@@ -3,12 +3,6 @@
 #![deny(missing_copy_implementations)]
 #![doc = include_str!("../Readme.md")]
 
-mod with_cursor;
-mod with_measure;
-mod with_keyboard;
+mod hooks;
 
-pub use with_cursor::*;
-pub use with_measure::*;
-
-pub use dioxus_use_window::*;
-pub use dioxus_use_clipboard::*;
+pub use hooks::*;

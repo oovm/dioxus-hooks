@@ -17,8 +17,7 @@ log = "0.4.14"
 
 [dependencies.web-sys]
 version = "0.3.56"
-features = ["Window", "Clipboard"]
-
+features = ["Window", "Clipboard", "Navigator"]
 
 [dev-dependencies]
 
