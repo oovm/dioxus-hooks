@@ -1,6 +1,7 @@
 mod methods;
 mod display;
 
+use std::cell::RefCell;
 use std::mem::MaybeUninit;
 use std::rc::Rc;
 use dioxus::core::ScopeState;
@@ -10,10 +11,9 @@ use web_sys::{MouseEvent, window};
 use wasm_bindgen::JsCast;
 
 /// effect handler
-pub struct UseCursor<'a> {
-    data: Option<&'a MouseEvent>,
-    update: Rc<dyn Fn()>,
-    listen_mouse_move: EventListener
+pub struct UseCursor {
+    data: Rc<RefCell<Option<MouseEvent>>>,
+    listen_mouse_move: Option<EventListener>
 }
 
 ///

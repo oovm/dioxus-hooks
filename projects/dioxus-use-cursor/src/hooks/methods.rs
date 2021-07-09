@@ -1,34 +1,39 @@
-use std::mem::{MaybeUninit, uninitialized};
+use std::cell::RefCell;
+use std::mem::{MaybeUninit};
 use std::ops::Deref;
 use dioxus::events::MouseData;
+use dioxus::hooks::use_state;
 use web_sys::Event;
 use super::*;
 
 
-impl UseCursor {
+impl<'a> UseCursor<'a> {
     ///
     pub fn new(cx: &ScopeState) -> Option<Self> {
         let window = window()?;
-        let mut hook = UseCursor {
-            data: None,
-            update: cx.schedule_update(),
-            listen_mouse_move: unsafe { MaybeUninit::uninit() },
-        };
-        let mouse_move = EventListener::new(&window, "mousemove", move |e| hook.on_mouse_move(e));
-        hook.listen_mouse_move.write(mouse_move);
-        unsafe {
-            hook.listen_mouse_move.assume_init();
-        }
-        Some(hook)
+
+        Rc::new(RefCell::new(None));
+
+        let mut data = None;
+        let regenerate= cx.schedule_update();
+        let mouse_move = EventListener::new(&window, "mousemove", move |e| {
+            let e: &MouseEvent = e.unchecked_ref();
+            data = Some(e.clone());
+            regenerate();
+        });
+        Some(Self {
+            data: &mut data,
+            listen_mouse_move: mouse_move
+        })
     }
-    fn on_mouse_move(&mut self, e: &Event) {
-        let e: &MouseEvent = e.unchecked_ref();
-        self.data = Some(e.clone());
-        (self.update)()
-    }
+    // fn on_mouse_move(&mut self, e: &Event) {
+    //     let e: &MouseEvent = e.unchecked_ref();
+    //     self.data = Some(e.clone());
+    //     (self.update)()
+    // }
 }
 
-impl UseCursor {
+impl<'a> UseCursor<'a> {
     /// Getter for the screenX field of this object.
     pub fn screen_x(&self) -> usize {
         match &self.data {
