@@ -7,13 +7,14 @@ use std::rc::Rc;
 use dioxus::core::ScopeState;
 use dioxus::events::MouseData;
 use gloo_events::EventListener;
-use web_sys::{MouseEvent, window};
+use web_sys::{Event, MouseEvent, window};
 use wasm_bindgen::JsCast;
 
 /// effect handler
-pub struct UseCursor {
-    data: Rc<RefCell<Option<MouseEvent>>>,
-    listen_mouse_move: Option<EventListener>
+pub struct UseCursor<'a, 'b> {
+    scope: &'a ScopeState ,
+    data: Option<&'b MouseEvent>,
+    listen_mouse_move: EventListener
 }
 
 ///

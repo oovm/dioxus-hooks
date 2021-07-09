@@ -1,5 +1,6 @@
 use std::cell::RefCell;
-use std::mem::{MaybeUninit};
+use std::mem;
+use std::mem::{MaybeUninit, zeroed};
 use std::ops::Deref;
 use dioxus::events::MouseData;
 use dioxus::hooks::use_state;
@@ -7,24 +8,25 @@ use web_sys::Event;
 use super::*;
 
 
-impl<'a> UseCursor<'a> {
+impl<'a, 'b> UseCursor<'a, 'b> {
     ///
-    pub fn new(cx: &ScopeState) -> Option<Self> {
+    pub fn new(cx: &'a ScopeState) -> Option<Self> {
         let window = window()?;
-
-        Rc::new(RefCell::new(None));
-
-        let mut data = None;
-        let regenerate= cx.schedule_update();
+        let mut hook = unsafe {
+            Self {
+                scope: cx,
+                data: None,
+                listen_mouse_move: zeroed(),
+            }
+        };
+        let regenerate = cx.schedule_update();
         let mouse_move = EventListener::new(&window, "mousemove", move |e| {
             let e: &MouseEvent = e.unchecked_ref();
-            data = Some(e.clone());
+            hook.data = Some(e);
             regenerate();
         });
-        Some(Self {
-            data: &mut data,
-            listen_mouse_move: mouse_move
-        })
+        hook.listen_mouse_move = mouse_move;
+        Some(hook)
     }
     // fn on_mouse_move(&mut self, e: &Event) {
     //     let e: &MouseEvent = e.unchecked_ref();
@@ -33,48 +35,28 @@ impl<'a> UseCursor<'a> {
     // }
 }
 
-impl<'a> UseCursor<'a> {
-    /// Getter for the screenX field of this object.
-    pub fn screen_x(&self) -> usize {
-        match &self.data {
-            None => { Default::default() }
-            Some(e) => {
-                e.screen_x() as _
-            }
-        }
-    }
-    ///
-    pub fn screen_y(&self) -> usize {
-        match &self.data {
-            None => { Default::default() }
-            Some(e) => {
-                e.screen_y() as _
-            }
-        }
-    }
-    ///
-    pub fn element_width(&self) -> usize {
-        match &self.data {
-            None => { Default::default() }
-            Some(e) => {
-                e.screen_x() as _
-            }
-        }
-    }
-    ///
-    pub fn element_height(&self) -> usize {
-        match &self.data {
-            None => { Default::default() }
-            Some(e) => {
-                e.screen_x() as _
-            }
-        }
-    }
-    ///
-    pub fn is_over(&self) {}
-    ///
-    pub fn is_down(&self) {}
-}
+// impl UseCursor {
+//     /// Getter for the screenX field of this object.
+//     pub fn screen_x(&self) -> usize {
+//         self.data.as_ref().map(|e| e.screen_x()).unwrap_or_default() as _
+//     }
+//     ///
+//     pub fn screen_y(&self) -> usize {
+//         self.data.as_ref().map(|e| e.screen_x()).unwrap_or_default() as _
+//     }
+//     ///
+//     pub fn element_width(&self) -> usize {
+//         self.data.as_ref().map(|e| e.screen_x()).unwrap_or_default() as _
+//     }
+//     ///
+//     pub fn element_height(&self) -> usize {
+//         self.data.as_ref().map(|e| e.screen_x()).unwrap_or_default() as _
+//     }
+//     ///
+//     pub fn is_over(&self) {}
+//     ///
+//     pub fn is_down(&self) {}
+// }
 
 /// https://www.npmjs.com/package/@react-hook/mouse-position
 impl UseHover {

@@ -12,7 +12,7 @@ use super::*;
 // }
 
 
-impl<'a> Debug for UseCursor<'a> {
+impl<'a,'b> Debug for UseCursor<'a,'b> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         todo!()
     }
