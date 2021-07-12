@@ -1,13 +1,8 @@
 use super::*;
-use log::debug;
-use wasm_bindgen::JsValue;
 
-impl Default for WindowSize {
-    fn default() -> Self {
-        // used for ssr
-        Self { x: MISSING_W, y: MISSING_H, listener: None }
-    }
-}
+
+
+
 
 impl WindowSize {
     /// builder of [`WindowSize`]
@@ -18,7 +13,11 @@ impl WindowSize {
         }
         let window = window()?;
         let regenerate = cx.schedule_update();
-        let mut hook = WindowSize { x, y, listener: None };
+        let hook = Rc::new(RefCell::new(WindowSizeData {
+            x,
+            y
+        }));
+
         let listener = EventListener::new(&window, "resize", move |_| {
             if let Some(size) = Self::get_size() {
                 hook.x = size.0;
@@ -31,7 +30,9 @@ impl WindowSize {
             }
         });
         hook.listener = Some(listener);
-        Some(hook)
+        Some(Self {
+
+        })
     }
     /// get size of the current window, return `None` if window not found
     pub fn get_size() -> Option<(f64, f64)> {

@@ -1,6 +1,7 @@
 #[deny(missing_doc_code_examples)]
 mod display;
 mod methods;
+mod builder;
 
 use dioxus::core::ScopeState;
 use gloo_events::EventListener;
@@ -8,7 +9,13 @@ use std::{
     fmt::{Display, Formatter},
     marker::PhantomData,
 };
+use std::cell::RefCell;
+use std::rc::Rc;
 use web_sys::window;
+pub use self::builder::{WindowSizeBuilder};
+use self::builder::{WindowSizeData};
+use log::debug;
+use wasm_bindgen::JsValue;
 
 const MISSING_W: f64 = 375.0;
 const MISSING_H: f64 = 812.0;
@@ -16,9 +23,8 @@ const MISSING_H: f64 = 812.0;
 /// Window size effect handler
 #[derive(Debug)]
 pub struct WindowSize {
-    x: f64,
-    y: f64,
-    listener: Option<EventListener>,
+    data: Rc<RefCell<WindowSizeData>>,
+    listener: EventListener,
 }
 
 /// hooks for window's size
@@ -43,8 +49,8 @@ pub struct WindowSize {
 ///     ))
 /// }
 /// ```
-pub fn use_window_size(cx: &ScopeState) -> WindowSize {
-    WindowSize::new(&cx, MISSING_W, MISSING_H).unwrap_or_default()
+pub fn use_window_size(cx: &ScopeState) -> &mut WindowSize {
+    cx.use_hook(|_| WindowSize::new(&cx, MISSING_W, MISSING_H).unwrap_or_default())
 }
 
 /// Window layout effect handler
@@ -76,11 +82,12 @@ pub struct WindowLayout<T> {
 ///     ))
 /// }
 /// ```
-pub fn use_window_layout<T>(cx: &ScopeState) -> WindowLayout<T>
-where
-    T: From<usize>,
+pub fn use_window_layout<T>(cx: &ScopeState) -> &WindowLayout<T>
+    where
+        T: From<usize>,
 {
-    WindowLayout { inner: WindowSize::new(cx, MISSING_W, MISSING_H).unwrap_or_default(), bound: Default::default() }
+    cx.use_hook(|_| cx.use_hook(WindowLayout { inner: WindowSize::new(cx, MISSING_W, MISSING_H).unwrap_or_default(), bound: Default::default() })
+    )
 }
 
 /// Window width effect handler
@@ -111,8 +118,8 @@ pub struct WindowWidth {
 ///     ))
 /// }
 /// ```
-pub fn use_width(cx: &ScopeState) -> WindowWidth {
-    WindowWidth { inner: WindowSize::new(cx, MISSING_W, MISSING_H).unwrap_or_default() }
+pub fn use_width(cx: &ScopeState) -> &WindowWidth {
+    cx.use_hook(|_| WindowWidth { inner: WindowSize::new(cx, MISSING_W, MISSING_H).unwrap_or_default() })
 }
 
 /// Window height effect handler
@@ -143,6 +150,6 @@ pub struct WindowHeight {
 ///     ))
 /// }
 /// ```
-pub fn use_height(cx: &ScopeState) -> WindowHeight {
-    WindowHeight { inner: WindowSize::new(cx, MISSING_W, MISSING_H).unwrap_or_default() }
+pub fn use_height(cx: &ScopeState) -> &WindowHeight {
+    cx.use_hook(|_| WindowHeight { inner: WindowSize::new(cx, MISSING_W, MISSING_H).unwrap_or_default() })
 }
