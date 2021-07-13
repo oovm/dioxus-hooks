@@ -1,6 +1,6 @@
 [package]
 name = "dioxus-use-window"
-version = "0.4.2"
+version = "0.4.3"
 authors = ["Aster <192607617@qq.com>"]
 description = "`use_window` hooks for dioxus"
 repository = "https://github.com/oovm/dioxus-hooks"

@@ -21,10 +21,9 @@ const MISSING_W: f64 = 375.0;
 const MISSING_H: f64 = 812.0;
 
 /// Window size effect handler
-#[derive(Debug)]
 pub struct WindowSize {
     data: Rc<RefCell<WindowSizeData>>,
-    listener: EventListener,
+    listen_window: Option<EventListener>,
 }
 
 /// hooks for window's size
@@ -85,9 +84,9 @@ pub struct WindowLayout<T> {
 pub fn use_window_layout<T>(cx: &ScopeState) -> &WindowLayout<T>
     where
         T: From<usize>,
+        T: 'static
 {
-    cx.use_hook(|_| cx.use_hook(WindowLayout { inner: WindowSize::new(cx, MISSING_W, MISSING_H).unwrap_or_default(), bound: Default::default() })
-    )
+    cx.use_hook(|_| WindowLayout { inner: WindowSize::new(cx, MISSING_W, MISSING_H).unwrap_or_default(), bound: Default::default() })
 }
 
 /// Window width effect handler

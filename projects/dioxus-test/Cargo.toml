@@ -23,3 +23,5 @@ default = []
 [package.metadata.wee]
 t = "cargo test"
 p = "cargo publish --allow-dirty"
+sw = "dioxus serve"
+sd = "dioxus serve --platform desktop"
