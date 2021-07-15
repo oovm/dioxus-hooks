@@ -1,5 +1,5 @@
-use std::fmt::Debug;
 use super::*;
+use std::fmt::Debug;
 
 impl Debug for WindowSize {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
@@ -19,9 +19,9 @@ impl Display for WindowSize {
 }
 
 impl<T> Display for WindowLayout<T>
-    where
-        T: Display,
-        T: From<usize>,
+where
+    T: Display,
+    T: From<usize>,
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         Display::fmt(&self.get(), f)

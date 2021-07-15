@@ -1,22 +1,19 @@
-mod methods;
-mod display;
 mod builder;
+mod display;
+mod methods;
 
-use std::cell::RefCell;
-use std::mem::MaybeUninit;
-use std::rc::Rc;
-use dioxus::core::ScopeState;
-use dioxus::events::MouseData;
-use gloo_events::EventListener;
-use web_sys::{Event, MouseEvent, window};
-use wasm_bindgen::JsCast;
-use self::builder::UseCursorData;
 pub use self::builder::UseCursorBuilder;
+use self::builder::UseCursorData;
+use dioxus::{core::ScopeState, events::MouseData};
+use gloo_events::EventListener;
+use std::{cell::RefCell, mem::MaybeUninit, rc::Rc};
+use wasm_bindgen::JsCast;
+use web_sys::{window, Event, MouseEvent};
 
 /// effect handler
 pub struct UseCursor {
     data: Rc<RefCell<UseCursorData>>,
-    listen_mouse_move: EventListener
+    listen_mouse_move: EventListener,
 }
 
 ///
@@ -25,9 +22,9 @@ pub fn use_cursor(cx: &ScopeState) -> UseCursor {
 }
 
 ///
-#[derive(Debug, Copy, Clone, )]
+#[derive(Debug, Copy, Clone)]
 pub struct UseHover {
-    over:bool,
+    over: bool,
 }
 ///
 pub fn use_hover(_cx: &ScopeState) -> UseCursor {

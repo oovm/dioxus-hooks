@@ -5,14 +5,11 @@ impl WindowSize {
     pub(crate) fn new(cx: &ScopeState, x: f64, y: f64) -> Option<Self> {
         #[cfg(debug_assertions)]
         {
-            debug!("Windows Resize Listener");
+            info!("Windows Resize Listener Initialized!");
         }
         let window = window()?;
         let regenerate = cx.schedule_update();
-        let data = Rc::new(RefCell::new(WindowSizeData {
-            x,
-            y
-        }));
+        let data = Rc::new(RefCell::new(WindowSizeData { x, y }));
         let setter = data.clone();
 
         let listener = EventListener::new(&window, "resize", move |_| {
@@ -21,16 +18,9 @@ impl WindowSize {
                 setter.x = size.0;
                 setter.y = size.1;
                 regenerate();
-                #[cfg(debug_assertions)]
-                {
-                    debug!("Windows Resize Event: {:?}", size);
-                }
             }
         });
-        Some(Self {
-            data,
-            listen_window: Some(listener)
-        })
+        Some(Self { data, listen_window: Some(listener) })
     }
     /// get size of the current window, return `None` if window not found
     pub fn get_size() -> Option<(f64, f64)> {
@@ -71,7 +61,7 @@ impl WindowSize {
     /// get aspect radio of current window
     #[inline]
     pub fn aspect_radio(&self) -> f64 {
-        let data =  self.data.borrow();
+        let data = self.data.borrow();
         data.x / data.y
     }
     /// using as [`WindowWidth`]

@@ -1,7 +1,6 @@
 use dioxus::core::ScopeState;
 use gloo_events::EventListener;
-use web_sys::window;
-use web_sys::Clipboard;
+use web_sys::{window, Clipboard};
 
 /// effect handler
 #[derive(Debug, Clone)]
@@ -15,9 +14,7 @@ impl ClipboardService {
     pub fn new(cx: &ScopeState) -> Option<Self> {
         let clipboard = window()?.navigator().clipboard()?;
 
-        Some(Self {
-            inner: clipboard,
-        })
+        Some(Self { inner: clipboard })
     }
 
     // #[inline]
@@ -26,10 +23,7 @@ impl ClipboardService {
     //     self.listeners.push(listener)
     // }
 
-    //
     // pub fn read_text(&self) {
     //    self.inner.read_text();
     // }
-
 }
-
