@@ -8,7 +8,7 @@ use std::{
 use web_sys::Event;
 
 impl UseCursor {
-    ///
+    /// builder of `UseCursor`
     pub(crate) fn new(cx: &ScopeState) -> Option<Self> {
         let window = window()?;
         let data = Rc::new(RefCell::new(UseCursorData { mouse: None }));
@@ -24,28 +24,33 @@ impl UseCursor {
     }
 }
 
-// impl UseCursor {
-//     /// Getter for the screenX field of this object.
-//     pub fn screen_x(&self) -> usize {
-//         self.data.as_ref().map(|e| e.screen_x()).unwrap_or_default() as _
-//     }
-//     ///
-//     pub fn screen_y(&self) -> usize {
-//         self.data.as_ref().map(|e| e.screen_x()).unwrap_or_default() as _
-//     }
-//     ///
-//     pub fn element_width(&self) -> usize {
-//         self.data.as_ref().map(|e| e.screen_x()).unwrap_or_default() as _
-//     }
-//     ///
-//     pub fn element_height(&self) -> usize {
-//         self.data.as_ref().map(|e| e.screen_x()).unwrap_or_default() as _
-//     }
-//     ///
-//     pub fn is_over(&self) {}
-//     ///
-//     pub fn is_down(&self) {}
-// }
+impl UseCursor {
+    /// Getter for the screenX field of this object.
+    pub fn screen_x(&self) -> usize {
+        self.view_mouse().map(|e| e.screen_x()).unwrap_or_default() as _
+    }
+    ///
+    pub fn screen_y(&self) -> usize {
+        self.view_mouse().map(|e| e.screen_y()).unwrap_or_default() as _
+    }
+    ///
+    pub fn element_width(&self) -> usize {
+        self.view_mouse().map(|e| e.page_x()).unwrap_or_default() as _
+    }
+    ///
+    pub fn element_height(&self) -> usize {
+        self.view_mouse().map(|e| e.element_height()).unwrap_or_default() as _
+    }
+    ///
+    pub fn is_over(&self) {}
+    ///
+    pub fn is_down(&self) {}
+
+    #[inline]
+    fn view_mouse(&self) -> Option<&MouseEvent> {
+        self.data.borrow().mouse.as_ref()
+    }
+}
 
 /// https://www.npmjs.com/package/@react-hook/mouse-position
 impl UseHover {
