@@ -48,9 +48,9 @@ pub struct WindowSize {
 ///     ))
 /// }
 /// ```
+#[inline]
 pub fn use_window_size(cx: &ScopeState) -> &mut WindowSize {
-    let builder = UseWindowBuilder::default();
-    cx.use_hook(|_| builder.use_window_size(cx))
+    UseWindowBuilder::default().use_window_size(cx)
 }
 
 /// Window layout effect handler
@@ -72,10 +72,10 @@ pub struct WindowLayout<T> {
 ///
 /// ```
 /// use dioxus::prelude::*;
-/// use dioxus_use_window::use_window_layout;
+/// use dioxus_use_window::{use_window_layout, ResponsiveLayout};
 ///
 /// fn App(cx: Scope) -> Element {
-///     let layout = use_window_layout(&cx);
+///     let layout = use_window_layout::<ResponsiveLayout>(&cx);
 ///
 ///     cx.render(rsx!(
 ///         h1 { "Window layout: {layout}" }
