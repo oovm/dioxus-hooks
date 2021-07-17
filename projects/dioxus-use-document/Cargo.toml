@@ -1,10 +1,10 @@
 [package]
-name = "dioxus-use-cursor"
-version = "0.2.0"
+name = "dioxus-use-document"
+version = "0.1.0"
 authors = ["Aster <192607617@qq.com>"]
-description = "`use_cursor` hooks for dioxus"
+description = "`use_head` hooks for dioxus"
 repository = "https://github.com/oovm/dioxus-hooks"
-documentation = "https://docs.rs/dioxus-use-cursor"
+documentation = "https://docs.rs/dioxus-use-head"
 readme = "Readme.md"
 license = "MPL-2.0"
 edition = "2021"
@@ -13,12 +13,11 @@ edition = "2021"
 dioxus = "0.1.8"
 gloo-events = "0.1.1"
 log = "0.4.14"
-wasm-bindgen = "0.2.79"
+#futures = "0.3.21"
 
 [dependencies.web-sys]
 version = "0.3.56"
-features = ["Window", "UiEvent", "MouseEvent"]
-
+features = ["Document", "Window", "Navigator"]
 
 [dev-dependencies]
 

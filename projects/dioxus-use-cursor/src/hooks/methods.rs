@@ -1,8 +1,5 @@
 use super::*;
-use std::{
-    cell::RefCell,
-
-};
+use std::cell::RefCell;
 use web_sys::Event;
 
 impl UseCursor {
@@ -33,7 +30,7 @@ impl UseCursor {
             page_y: e.page_y(),
             screen_x: e.screen_x(),
             screen_y: e.screen_y(),
-            shift_key: e.shift_key()
+            shift_key: e.shift_key(),
         }
     }
 }

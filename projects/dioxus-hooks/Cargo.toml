@@ -10,7 +10,7 @@ license = "MPL-2.0"
 edition = "2021"
 
 [dependencies]
-dioxus-use-window = {version ="0.4.*", path = "../dioxus-use-window"}
+dioxus-use-window = {version ="0.5.*", path = "../dioxus-use-window"}
 dioxus-use-clipboard = {version ="0.1.*", path = "../dioxus-use-clipboard", optional = true}
 dioxus-use-cursor = {version ="0.2.*", path = "../dioxus-use-cursor"}
 

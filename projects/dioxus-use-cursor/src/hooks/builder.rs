@@ -28,7 +28,7 @@ impl Default for UseCursorData {
                 screen_x: 0,
                 screen_y: 0,
                 shift_key: false,
-            }
+            },
         }
     }
 }
@@ -41,13 +41,9 @@ impl Default for UseCursorBuilder {
 
 impl Default for UseCursor {
     fn default() -> Self {
-        Self {
-            data: Rc::new(RefCell::new(Default::default())),
-            listen_mouse_move: None,
-        }
+        Self { data: Rc::new(RefCell::new(Default::default())), listen_mouse_move: None }
     }
 }
-
 
 impl UseCursorBuilder {
     /// hooks for window's size with config

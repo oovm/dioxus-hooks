@@ -7,7 +7,7 @@ pub use self::builder::UseWindowBuilder;
 use self::builder::WindowSizeData;
 use dioxus::core::ScopeState;
 use gloo_events::EventListener;
-use log::{info};
+use log::info;
 use std::{
     cell::RefCell,
     fmt::{Display, Formatter},

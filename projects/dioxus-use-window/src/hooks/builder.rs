@@ -52,7 +52,7 @@ impl UseWindowBuilder {
     ///     ))
     /// }
     /// ```
-    pub fn use_window_size<'a,'b>(&'a self, cx: &'b ScopeState) -> &'b mut WindowSize {
+    pub fn use_window_size<'a, 'b>(&'a self, cx: &'b ScopeState) -> &'b mut WindowSize {
         let x = self.missing_x as f64;
         let y = self.missing_y as f64;
         let hook = match WindowSize::new(cx, x, y) {
@@ -63,6 +63,5 @@ impl UseWindowBuilder {
             Some(s) => s,
         };
         cx.use_hook(|_| hook)
-
     }
 }

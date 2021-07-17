@@ -19,12 +19,8 @@ impl Debug for UseCursor {
     }
 }
 
-
 impl Display for UseCursor {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        f.debug_tuple("")
-            .field(&self.screen_x())
-            .field(&self.screen_y())
-            .finish()
+        f.debug_tuple("").field(&self.screen_x()).field(&self.screen_y()).finish()
     }
 }
