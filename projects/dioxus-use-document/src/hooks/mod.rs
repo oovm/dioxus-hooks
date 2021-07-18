@@ -1,37 +1,29 @@
 mod use_title;
 mod use_document;
+mod builder;
 
 use dioxus::core::ScopeState;
 use gloo_events::EventListener;
-use web_sys::{window, Clipboard};
+use web_sys::{window};
 use std::cell::RefCell;
 use std::rc::Rc;
 use web_sys::Document;
+pub use self::builder::UseDocumentBuilder;
+pub use self::use_document::UseDocument;
+pub use self::use_title::{UseTitle};
 
-/// effect handler
-#[derive(Debug, Clone)]
-pub struct ClipboardService {
-    inner: Clipboard,
-    // listeners: Vec<EventListener>
+
+#[inline]
+pub fn use_document(cx: &ScopeState) -> &UseDocument {
+    UseDocumentBuilder::default().use_document(cx)
 }
 
-pub struct UseTitle {
-
+#[inline]
+pub fn use_title(cx: &ScopeState) -> &UseTitle {
+    UseDocumentBuilder::default().use_title(cx)
 }
-
-impl UseTitle {
-    pub fn new() {
-
-    }
-}
-
-
 
 pub fn use_theme() {
-
-}
-
-pub fn use_title() {
 
 }
 
@@ -39,25 +31,4 @@ pub fn use_lang() {
 
 }
 
-pub fn use_document() {
 
-}
-
-impl ClipboardService {
-    /// do
-    pub fn new(cx: &ScopeState) -> Option<Self> {
-        let clipboard = window()?.navigator().clipboard()?;
-
-        Some(Self { inner: clipboard })
-    }
-
-    // #[inline]
-    // pub fn listen(&mut self, listener: EventListener) {
-    //     // EventListener::new()
-    //     self.listeners.push(listener)
-    // }
-
-    // pub fn read_text(&self) {
-    //    self.inner.read_text();
-    // }
-}

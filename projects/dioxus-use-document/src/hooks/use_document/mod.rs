@@ -1,20 +1,20 @@
 use super::*;
 
 
-
 pub struct UseDocument {
-    data: Rc<RefCell<UseDocumentData>>
+    data: Rc<RefCell<UseDocumentData>>,
 }
 
 struct UseDocumentData {
-    document: Document
+    document: Option<Document>,
 }
 
+
 impl UseDocument {
-    pub fn new(cx: &ScopeState) -> Option<Self>{
+    pub fn new(cx: &ScopeState) -> Option<Self> {
         let document = window()?.document()?;
         let data = Rc::new(RefCell::new(UseDocumentData {
-            document
+            document: Some(document)
         }));
 
 
@@ -27,6 +27,26 @@ impl UseDocument {
 impl UseDocument {
     /// Title
     pub fn title(&self) -> String {
-        self.data.borrow().document.title()
+        let document = &self.data.borrow_mut().document;
+        match document {
+            None => { String::new() }
+            Some(e) => {
+                e.title() }
+        }
+    }
+    ///
+    pub fn set_title(&self, input: &str) -> Option<()> {
+        let document = &self.data.borrow_mut().document;
+        Some(document.as_ref()?.set_title(input))
+    }
+    /// Title
+    pub fn charset(&self) -> String {
+        let document = &self.data.borrow_mut().document;
+        match document {
+            None => { String::from("utf-8") }
+            Some(e) => {
+                e.character_set()
+            }
+        }
     }
 }
