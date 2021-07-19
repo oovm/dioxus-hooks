@@ -1,11 +1,10 @@
 use super::*;
 
-
-pub struct UseTitle {
+pub struct UseCharacterSet {
     inner: UseDocument,
 }
 
-impl UseTitle {
+impl UseCharacterSet {
     pub(crate) fn new(cx: &ScopeState) -> Option<Self> {
         Some(Self {
             inner: UseDocument::new(cx)?
@@ -13,13 +12,9 @@ impl UseTitle {
     }
 }
 
-impl UseTitle {
+impl UseCharacterSet {
     #[inline]
     pub fn get(&self) -> String {
-        self.inner.title()
-    }
-    #[inline]
-    pub fn set(&self, title: &str) -> bool {
-        self.inner.set_title(title).is_some()
+        self.inner.character_set()
     }
 }

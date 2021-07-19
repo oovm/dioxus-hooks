@@ -1,5 +1,5 @@
 [package]
-name = "dioxus-use-document"
+name = "dioxus-use-navigator"
 version = "0.1.0"
 authors = ["Aster <192607617@qq.com>"]
 description = "`use_head` hooks for dioxus"
