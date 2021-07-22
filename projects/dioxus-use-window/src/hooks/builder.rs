@@ -7,10 +7,7 @@ pub struct UseWindowBuilder {
     missing_y: usize,
 }
 
-pub(crate) struct WindowSizeData {
-    pub(crate) x: f64,
-    pub(crate) y: f64,
-}
+
 
 impl Default for UseWindowBuilder {
     fn default() -> Self {

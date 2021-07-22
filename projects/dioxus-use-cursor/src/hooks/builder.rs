@@ -10,12 +10,6 @@ impl Default for UseCursorBuilder {
     }
 }
 
-impl Default for UseCursor {
-    fn default() -> Self {
-        Self { data: Rc::new(RefCell::new(Default::default())), listen_mouse_move: None }
-    }
-}
-
 impl UseCursorBuilder {
     /// hooks for window's size with config
     ///
@@ -29,18 +23,44 @@ impl UseCursorBuilder {
     ///
     /// ```
     /// use dioxus::prelude::*;
-    /// use dioxus_use_window::use_window_size;
+    /// use dioxus_use_cursor::use_cursor;
     ///
     /// fn App(cx: Scope) -> Element {
-    ///     let size = use_window_size(&cx);
+    ///     let size = use_cursor(&cx);
     ///
     ///     cx.render(rsx!(
     ///         h1 { "Window size: {size}" }
     ///     ))
     /// }
     /// ```
-    pub fn use_cursor<'a, 'b>(&'a self, cx: &'b ScopeState) -> &'b mut UseCursor {
+    pub fn use_cursor<'a>(&self, cx: &'a ScopeState) -> &'a mut UseCursor {
         let hook = UseCursor::new(cx).unwrap_or_default();
+        cx.use_hook(|_| hook)
+    }
+    /// hooks for window's size with config
+    ///
+    /// # Arguments
+    ///
+    /// * `cx`: [`Scope`] or [`ScopeState`]
+    ///
+    /// returns: [`WindowSize`]
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use dioxus::prelude::*;
+    /// use dioxus_use_cursor::use_hover;
+    ///
+    /// fn App(cx: Scope) -> Element {
+    ///     let size = use_hover(&cx);
+    ///
+    ///     cx.render(rsx!(
+    ///         h1 { "Window size: {size}" }
+    ///     ))
+    /// }
+    /// ```
+    pub fn use_hover<'a>(&self, cx: &'a ScopeState) -> &'a mut UseHover {
+        let hook = UseHover::new(cx, todo!());
         cx.use_hook(|_| hook)
     }
 }

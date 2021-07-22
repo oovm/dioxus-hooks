@@ -3,18 +3,17 @@ mod use_cursor;
 mod use_hover;
 // mod use_focus;
 // mod use_hovering;
-use log::info;
-use web_sys::EventTarget;
-pub use self::builder::UseCursorBuilder;
-pub use self::{
-    use_cursor::UseCursor,
-    use_hover::UseHover
-};use web_sys::Event;
+pub use self::{builder::UseCursorBuilder, use_cursor::UseCursor, use_hover::UseHover};
 use dioxus::{core::ScopeState, events::MouseData};
 use gloo_events::EventListener;
-use std::{cell::RefCell, rc::Rc};
+use log::info;
+use std::{
+    cell::RefCell,
+    fmt::{Debug, Display, Formatter},
+    rc::Rc,
+};
 use wasm_bindgen::JsCast;
-use web_sys::{window, MouseEvent};
+use web_sys::{window, Event, EventTarget, MouseEvent};
 
 /// hooks for window's size
 ///
@@ -32,7 +31,7 @@ use web_sys::{window, MouseEvent};
 ///     let cursor = use_cursor(&cx);
 ///
 ///     cx.render(rsx!(
-///         h1 { "Window size: {cursor}" }
+///         h1 { "Cursor position: {cursor}" }
 ///     ))
 /// }
 /// ```
@@ -41,7 +40,27 @@ pub fn use_cursor(cx: &ScopeState) -> &UseCursor {
     UseCursorBuilder::default().use_cursor(cx)
 }
 
+/// hooks for window's size
 ///
-pub fn use_hover(_cx: &ScopeState) -> UseCursor {
-    todo!()
+/// # Arguments
+///
+/// returns: [`UseHover`]
+///
+/// # Examples
+///
+/// ```
+/// use dioxus::prelude::*;
+/// use dioxus_use_cursor::{use_hover};
+///
+/// fn App(cx: Scope) -> Element {
+///     let hover = use_hover(&cx);
+///
+///     cx.render(rsx!(
+///         h1 { "Hover: {hover}" }
+///     ))
+/// }
+/// ```
+#[inline]
+pub fn use_hover(cx: &ScopeState) -> &UseHover {
+    UseCursorBuilder::default().use_hover(cx)
 }

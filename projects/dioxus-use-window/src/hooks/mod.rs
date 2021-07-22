@@ -1,10 +1,13 @@
+// #![deny(missing_doc_code_examples)]
 mod builder;
-#[deny(missing_doc_code_examples)]
 mod display;
 mod methods;
+mod use_window;
+mod use_width;
+mod use_height;
+mod use_layout;
 
 pub use self::builder::UseWindowBuilder;
-use self::builder::WindowSizeData;
 use dioxus::core::ScopeState;
 use gloo_events::EventListener;
 use log::info;
@@ -14,17 +17,13 @@ use std::{
     marker::PhantomData,
     rc::Rc,
 };
+
 use wasm_bindgen::JsValue;
 use web_sys::window;
+pub use self::use_window::WindowSize;
 
 const MISSING_W: f64 = 375.0;
 const MISSING_H: f64 = 812.0;
-
-/// Window size effect handler
-pub struct WindowSize {
-    data: Rc<RefCell<WindowSizeData>>,
-    listen_window: Option<EventListener>,
-}
 
 /// hooks for window's size
 ///

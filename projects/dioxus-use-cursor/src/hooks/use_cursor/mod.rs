@@ -1,6 +1,5 @@
 mod display;
 
-
 use super::*;
 
 /// effect handler

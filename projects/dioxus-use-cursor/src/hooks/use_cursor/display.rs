@@ -1,6 +1,12 @@
 use super::*;
 use std::fmt::{Debug, Display, Formatter};
 
+impl Default for UseCursor {
+    fn default() -> Self {
+        Self { data: Rc::new(RefCell::new(Default::default())), listen_mouse_move: None }
+    }
+}
+
 impl Default for UseCursorData {
     fn default() -> Self {
         Self {

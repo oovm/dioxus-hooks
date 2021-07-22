@@ -1,25 +1,12 @@
 use super::*;
+use web_sys::{EventTarget, Window};
 
 impl WindowSize {
     /// builder of [`WindowSize`]
     pub(crate) fn new(cx: &ScopeState, x: f64, y: f64) -> Option<Self> {
         let window = window()?;
-        let regenerate = cx.schedule_update();
         let data = Rc::new(RefCell::new(WindowSizeData { x, y }));
-        let setter = data.clone();
-
-        let listener = EventListener::new(&window, "resize", move |_| {
-            let mut setter = setter.borrow_mut();
-            if let Some(size) = Self::get_size() {
-                setter.x = size.0;
-                setter.y = size.1;
-                regenerate();
-            }
-        });
-        #[cfg(debug_assertions)]
-        {
-            info!("Windows Resize Listener Initialized!");
-        }
+        let listener = Self::on_window_resize(cx, &window, &data);
         Some(Self { data, listen_window: Some(listener) })
     }
     /// get size of the current window, return `None` if window not found
@@ -36,6 +23,22 @@ impl WindowSize {
     /// set height of the current window, return `None` if failed to run
     pub fn set_window_height(input: usize) -> Option<()> {
         window()?.set_inner_width(&JsValue::from(input)).ok()
+    }
+    fn on_window_resize(cx: &ScopeState, window: &Window, data: &Rc<RefCell<WindowSizeData>>) -> EventListener {
+        #[cfg(debug_assertions)]
+        {
+            info!("Windows Resize Listener Initialized at {}!", cx.scope_id().0);
+        }
+        let regenerate = cx.schedule_update();
+        let setter = data.clone();
+        let listener = EventListener::new(window, "resize", move |_| {
+            let mut setter = setter.borrow_mut();
+            if let Some(size) = Self::get_size() {
+                setter.x = size.0;
+                setter.y = size.1;
+                regenerate();
+            }
+        });
     }
 }
 
