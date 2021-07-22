@@ -3,10 +3,6 @@ use super::*;
 impl WindowSize {
     /// builder of [`WindowSize`]
     pub(crate) fn new(cx: &ScopeState, x: f64, y: f64) -> Option<Self> {
-        #[cfg(debug_assertions)]
-        {
-            info!("Windows Resize Listener Initialized!");
-        }
         let window = window()?;
         let regenerate = cx.schedule_update();
         let data = Rc::new(RefCell::new(WindowSizeData { x, y }));
@@ -20,6 +16,10 @@ impl WindowSize {
                 regenerate();
             }
         });
+        #[cfg(debug_assertions)]
+        {
+            info!("Windows Resize Listener Initialized!");
+        }
         Some(Self { data, listen_window: Some(listener) })
     }
     /// get size of the current window, return `None` if window not found

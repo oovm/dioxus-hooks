@@ -1,15 +1,12 @@
 use super::*;
 
-
 pub struct UseTitle {
     inner: UseDocument,
 }
 
 impl UseTitle {
     pub(crate) fn new(cx: &ScopeState) -> Option<Self> {
-        Some(Self {
-            inner: UseDocument::new(cx)?
-        })
+        Some(Self { inner: UseDocument::new(cx)? })
     }
 }
 

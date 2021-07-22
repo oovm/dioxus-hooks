@@ -4,35 +4,6 @@ use super::*;
 #[derive(Debug, Copy, Clone)]
 pub struct UseCursorBuilder {}
 
-pub(crate) struct UseCursorData {
-    pub(crate) mouse: MouseData,
-}
-#[derive(Debug, Clone)]
-pub(crate) struct UseHoverData {
-    pub(crate) hover: bool,
-}
-
-impl Default for UseCursorData {
-    fn default() -> Self {
-        Self {
-            mouse: MouseData {
-                alt_key: false,
-                button: 0,
-                buttons: 0,
-                client_x: 0,
-                client_y: 0,
-                ctrl_key: false,
-                meta_key: false,
-                page_x: 0,
-                page_y: 0,
-                screen_x: 0,
-                screen_y: 0,
-                shift_key: false,
-            },
-        }
-    }
-}
-
 impl Default for UseCursorBuilder {
     fn default() -> Self {
         Self {}

@@ -1,6 +1,17 @@
+mod display;
+
+
 use super::*;
-use std::cell::RefCell;
-use web_sys::Event;
+
+/// effect handler
+pub struct UseCursor {
+    data: Rc<RefCell<UseCursorData>>,
+    listen_mouse_move: Option<EventListener>,
+}
+
+struct UseCursorData {
+    mouse: MouseData,
+}
 
 impl UseCursor {
     /// builder of `UseCursor`
@@ -61,28 +72,4 @@ impl UseCursor {
     // fn view_mouse(&self) -> Option<&MouseEvent> {
     //     self.data.borrow().mouse.as_ref()
     // }
-}
-
-/// https://www.npmjs.com/package/@react-hook/mouse-position
-impl UseHover {
-    // pub fn new() {
-    //     let mut hook = UseCursor {
-    //         last_event: UseCursor {}
-    //     };
-    //
-    //     let mouseover = EventListener::new(&window, "mouseover", move |_| {
-    //         hook.over = true;
-    //     });
-    //     let mouseout = EventListener::new(&window, "mouseout", move |_| {
-    //         hook.over = false;
-    //     });
-    // }
-}
-
-impl UseHover {
-    ///
-    #[inline]
-    pub fn get(&self) {
-        // self.over.is_over()
-    }
 }

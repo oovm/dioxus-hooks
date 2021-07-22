@@ -1,23 +1,16 @@
-use crate::hooks::use_document::UseDocument;
 use super::*;
+use crate::hooks::use_document::UseDocument;
 
-pub struct UseDocumentBuilder {
-
-}
+pub struct UseDocumentBuilder {}
 
 impl Default for UseDocumentBuilder {
     fn default() -> Self {
-        Self {
-
-        }
+        Self {}
     }
 }
 
-
-
-
 impl UseDocumentBuilder {
-    pub fn use_document<'a>(& self, cx: &'a ScopeState) -> &'a mut UseDocument {
+    pub fn use_document<'a>(&self, cx: &'a ScopeState) -> &'a mut UseDocument {
         let hook = UseDocument::new(cx).unwrap();
         cx.use_hook(|_| hook)
     }
@@ -27,6 +20,10 @@ impl UseDocumentBuilder {
     }
     pub fn use_charset<'a>(&self, cx: &'a ScopeState) -> &'a mut UseCharacterSet {
         let hook = UseCharacterSet::new(cx).unwrap();
+        cx.use_hook(|_| hook)
+    }
+    pub fn use_html_lang<'a>(&self, cx: &'a ScopeState) -> &'a mut UseHtmlLanguage {
+        let hook = UseHtmlLanguage::new(cx).unwrap();
         cx.use_hook(|_| hook)
     }
 }

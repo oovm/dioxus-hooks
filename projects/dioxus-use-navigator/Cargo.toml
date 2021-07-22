@@ -17,7 +17,12 @@ log = "0.4.14"
 
 [dependencies.web-sys]
 version = "0.3.56"
-features = ["Window", "Navigator", "Document", "DocumentType", "MutationObserver"]
+features = [
+    "Window", "Element", "Navigator",
+    "Document", "DocumentType",
+    "HtmlCollection",
+    "MutationObserver"
+]
 
 [dev-dependencies]
 

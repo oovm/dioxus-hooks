@@ -1,40 +1,38 @@
 mod builder;
-mod display;
-mod methods;
-
+mod use_cursor;
+mod use_hover;
+// mod use_focus;
+// mod use_hovering;
+use log::info;
+use web_sys::EventTarget;
 pub use self::builder::UseCursorBuilder;
-use self::builder::{UseCursorData, UseHoverData};
+pub use self::{
+    use_cursor::UseCursor,
+    use_hover::UseHover
+};use web_sys::Event;
 use dioxus::{core::ScopeState, events::MouseData};
 use gloo_events::EventListener;
 use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::JsCast;
 use web_sys::{window, MouseEvent};
 
-/// effect handler
-pub struct UseCursor {
-    data: Rc<RefCell<UseCursorData>>,
-    listen_mouse_move: Option<EventListener>,
-}
-
 /// hooks for window's size
 ///
 /// # Arguments
 ///
-/// * `cx`: [`Scope`] or [`ScopeState`]
-///
-/// returns: [`WindowSize`]
+/// returns: [`UseCursor`]
 ///
 /// # Examples
 ///
 /// ```
 /// use dioxus::prelude::*;
-/// use dioxus_use_window::use_window_size;
+/// use dioxus_use_cursor::use_cursor;
 ///
 /// fn App(cx: Scope) -> Element {
-///     let size = use_window_size(&cx);
+///     let cursor = use_cursor(&cx);
 ///
 ///     cx.render(rsx!(
-///         h1 { "Window size: {size}" }
+///         h1 { "Window size: {cursor}" }
 ///     ))
 /// }
 /// ```
@@ -43,11 +41,6 @@ pub fn use_cursor(cx: &ScopeState) -> &UseCursor {
     UseCursorBuilder::default().use_cursor(cx)
 }
 
-///
-#[derive(Debug, Clone)]
-pub struct UseHover {
-    data: UseHoverData,
-}
 ///
 pub fn use_hover(_cx: &ScopeState) -> UseCursor {
     todo!()

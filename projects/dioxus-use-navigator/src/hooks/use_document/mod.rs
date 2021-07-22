@@ -1,6 +1,5 @@
-use web_sys::DocumentType;
 use super::*;
-
+use web_sys::DocumentType;
 
 pub struct UseDocument {
     data: Rc<RefCell<UseDocumentData>>,
@@ -10,18 +9,12 @@ struct UseDocumentData {
     document: Option<Document>,
 }
 
-
 impl UseDocument {
     pub fn new(cx: &ScopeState) -> Option<Self> {
         let document = window()?.document()?;
-        let data = Rc::new(RefCell::new(UseDocumentData {
-            document: Some(document)
-        }));
+        let data = Rc::new(RefCell::new(UseDocumentData { document: Some(document) }));
 
-
-        Some(Self {
-            data
-        })
+        Some(Self { data })
     }
 }
 
@@ -30,9 +23,8 @@ impl UseDocument {
     pub fn title(&self) -> String {
         let document = &self.data.borrow_mut().document;
         match document {
-            None => { String::new() }
-            Some(e) => {
-                e.title() }
+            None => String::new(),
+            Some(e) => e.title(),
         }
     }
     ///
@@ -44,10 +36,8 @@ impl UseDocument {
     pub fn character_set(&self) -> String {
         let document = &self.data.borrow_mut().document;
         match document {
-            None => { String::from("utf-8") }
-            Some(e) => {
-                e.character_set()
-            }
+            None => String::from("utf-8"),
+            Some(e) => e.character_set(),
         }
     }
     /// **read-only**

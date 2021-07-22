@@ -6,9 +6,7 @@ pub struct UseCharacterSet {
 
 impl UseCharacterSet {
     pub(crate) fn new(cx: &ScopeState) -> Option<Self> {
-        Some(Self {
-            inner: UseDocument::new(cx)?
-        })
+        Some(Self { inner: UseDocument::new(cx)? })
     }
 }
 
