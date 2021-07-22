@@ -3,8 +3,8 @@ use super::*;
 /// Build window size hook with config
 #[derive(Debug, Copy, Clone)]
 pub struct UseWindowBuilder {
-    missing_x: usize,
-    missing_y: usize,
+    pub missing_x: usize,
+    pub missing_y: usize,
 }
 
 impl Default for UseWindowBuilder {
@@ -34,13 +34,42 @@ impl UseWindowBuilder {
     ///     ))
     /// }
     /// ```
-    pub fn use_window_size<'a, 'b>(&'a self, cx: &'b ScopeState) -> &'b mut WindowSize {
-        let x = self.missing_x as f64;
-        let y = self.missing_y as f64;
-        let hook = match WindowSize::new(cx, x, y) {
+    pub fn use_window_size<'a>(& self, cx: &'a ScopeState) -> &'a mut WindowSize {
+        let hook = match WindowSize::new(cx) {
             None => {
-                let data = WindowSizeData { x, y };
-                WindowSize { data: Rc::new(RefCell::new(data)), listen_window: None }
+                let data = WindowSizeData::from(self.clone());
+                WindowSize::new_ssr(cx, data)
+            }
+            Some(s) => s,
+        };
+        cx.use_hook(|_| hook)
+    }
+
+    pub fn use_width<'a>(& self, cx: &'a ScopeState) -> &'a mut WindowSize {
+        let hook = match WindowSize::new(cx) {
+            None => {
+                let data = WindowSizeData::from(self.clone());
+                WindowSize::new_ssr(cx, data)
+            }
+            Some(s) => s,
+        };
+        cx.use_hook(|_| hook)
+    }
+    pub fn use_height<'a>(& self, cx: &'a ScopeState) -> &'a mut WindowSize {
+        let hook = match WindowSize::new(cx) {
+            None => {
+                let data = WindowSizeData::from(self.clone());
+                WindowSize::new_ssr(cx, data)
+            }
+            Some(s) => s,
+        };
+        cx.use_hook(|_| hook)
+    }
+    pub fn use_layout<'a>(& self, cx: &'a ScopeState) -> &'a mut WindowSize {
+        let hook = match WindowSize::new(cx) {
+            None => {
+                let data = WindowSizeData::from(self.clone());
+                WindowSize::new_ssr(cx, data)
             }
             Some(s) => s,
         };

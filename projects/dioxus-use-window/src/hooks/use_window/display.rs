@@ -29,3 +29,12 @@ impl Display for WindowSize {
         f.debug_tuple("").field(&self.width()).field(&self.height()).finish()
     }
 }
+
+impl From<UseWindowBuilder> for WindowSizeData {
+    fn from(builder: UseWindowBuilder) -> Self {
+        let x = builder.missing_x as f64;
+        let y = builder.missing_y as f64;
+
+        Self { x, y }
+    }
+}

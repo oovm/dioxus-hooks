@@ -5,6 +5,7 @@ mod use_layout;
 mod use_width;
 mod use_window;
 
+use self::use_window::WindowSizeData;
 pub use self::{builder::UseWindowBuilder, use_window::WindowSize};
 use dioxus::core::ScopeState;
 use gloo_events::EventListener;

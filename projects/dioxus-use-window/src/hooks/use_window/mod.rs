@@ -1,4 +1,5 @@
 use super::*;
+
 mod display;
 
 /// Window size effect handler
@@ -14,11 +15,17 @@ pub(crate) struct WindowSizeData {
 
 impl WindowSize {
     /// builder of [`WindowSize`]
-    pub(crate) fn new(cx: &ScopeState, data: WindowSizeData) -> Option<Self> {
-        let data = Rc::new(RefCell::new(data));
+
+    pub(crate) fn new(cx: &ScopeState) -> Option<Self> {
         let window = window()?;
+        let size = Self::get_size()?;
+        let data = Rc::new(RefCell::new(WindowSizeData { x: size.0, y: size.1 }));
         let listener = Self::on_window_resize(cx, &window, &data);
         Some(Self { data, listen_window: Some(listener) })
+    }
+    pub(crate) fn new_ssr(_: &ScopeState, data: WindowSizeData) -> Self {
+        let data = Rc::new(RefCell::new(data));
+        Self { data, listen_window: None }
     }
 
     /// get size of the current window, return `None` if window not found
