@@ -14,6 +14,10 @@ use std::{
 /// For 2K screen, which has a `2560px × 1440px @ 1.5x` screen, the actual size is `1706epx × 960epx`.
 ///
 /// For 4K screen, which has a `4096px × 2160px @ 2x` screen, the actual size is `2048epx × 1024epx`.
+///
+/// ## Example
+///
+/// see: [`crate::use_window_layout`]
 #[derive(Debug, Copy, Clone)]
 pub enum ResponsiveLayout {
     /// `width ⩽ 375epx`

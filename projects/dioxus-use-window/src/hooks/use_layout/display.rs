@@ -1,6 +1,6 @@
 use super::*;
 
-impl<T> Display for WindowLayout<T>
+impl<T> Display for UseWindowLayout<T>
 where
     T: Display,
     T: From<usize>,

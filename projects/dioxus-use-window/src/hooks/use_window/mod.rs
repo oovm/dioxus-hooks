@@ -3,7 +3,7 @@ use super::*;
 mod display;
 
 /// Window size effect handler
-pub struct WindowSize {
+pub struct UseWindowSize {
     data: Rc<RefCell<WindowSizeData>>,
     listen_window: Option<EventListener>,
 }
@@ -13,9 +13,7 @@ pub(crate) struct WindowSizeData {
     y: f64,
 }
 
-impl WindowSize {
-    /// builder of [`WindowSize`]
-
+impl UseWindowSize {
     pub(crate) fn new(cx: &ScopeState) -> Option<Self> {
         let window = window()?;
         let size = Self::get_size()?;
@@ -27,7 +25,25 @@ impl WindowSize {
         let data = Rc::new(RefCell::new(data));
         Self { data, listen_window: None }
     }
+    fn on_window_resize(cx: &ScopeState, window: &Window, data: &Rc<RefCell<WindowSizeData>>) -> EventListener {
+        #[cfg(debug_assertions)]
+        {
+            info!("Windows Resize Listener Initialized at {}!", cx.scope_id().0);
+        }
+        let regenerate = cx.schedule_update();
+        let setter = data.clone();
+        EventListener::new(window, "resize", move |_| {
+            let mut setter = setter.borrow_mut();
+            if let Some(size) = Self::get_size() {
+                setter.x = size.0;
+                setter.y = size.1;
+                regenerate();
+            }
+        })
+    }
+}
 
+impl UseWindowSize {
     /// get size of the current window, return `None` if window not found
     pub fn get_size() -> Option<(f64, f64)> {
         let window = window()?;
@@ -43,25 +59,9 @@ impl WindowSize {
     pub fn set_window_height(input: usize) -> Option<()> {
         window()?.set_inner_width(&JsValue::from(input)).ok()
     }
-    fn on_window_resize(cx: &ScopeState, window: &Window, data: &Rc<RefCell<WindowSizeData>>) -> EventListener {
-        #[cfg(debug_assertions)]
-        {
-            info!("Windows Resize Listener Initialized at {}!", cx.scope_id().0);
-        }
-        let regenerate = cx.schedule_update();
-        let setter = data.clone();
-        let listener = EventListener::new(window, "resize", move |_| {
-            let mut setter = setter.borrow_mut();
-            if let Some(size) = Self::get_size() {
-                setter.x = size.0;
-                setter.y = size.1;
-                regenerate();
-            }
-        });
-    }
 }
 
-impl WindowSize {
+impl UseWindowSize {
     /// get width of current window
     #[inline]
     pub fn width(&self) -> usize {
@@ -88,17 +88,17 @@ impl WindowSize {
     }
     /// using as [`WindowWidth`]
     #[inline]
-    pub fn as_width(self) -> WindowWidth {
-        WindowWidth { inner: self }
+    pub fn as_width(self) -> UseWindowWidth {
+        UseWindowWidth { inner: self }
     }
     /// using as [`WindowHeight`]
     #[inline]
-    pub fn as_height(self) -> WindowHeight {
-        WindowHeight { inner: self }
+    pub fn as_height(self) -> UseWindowHeight {
+        UseWindowHeight { inner: self }
     }
     /// using as [`WindowLayout`]
     #[inline]
-    pub fn as_layout<T>(self) -> WindowLayout<T> {
-        WindowLayout { inner: self, bound: Default::default() }
+    pub fn as_layout<T>(self) -> UseWindowLayout<T> {
+        UseWindowLayout { inner: self, bound: Default::default() }
     }
 }

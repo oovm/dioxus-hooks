@@ -1,7 +1,13 @@
 mod display;
 use super::*;
 
-impl WindowHeight {
+/// Window height effect handler
+#[derive(Debug)]
+pub struct UseWindowHeight {
+    inner: UseWindowSize,
+}
+
+impl UseWindowHeight {
     /// get height of current window
     #[inline]
     pub fn get(&self) -> usize {
@@ -10,6 +16,6 @@ impl WindowHeight {
     /// set height of current window, return `false` if failed to run
     #[inline]
     pub fn set(&self, height: usize) -> bool {
-        WindowSize::set_window_height(height).is_some()
+        UseWindowSize::set_window_height(height).is_some()
     }
 }

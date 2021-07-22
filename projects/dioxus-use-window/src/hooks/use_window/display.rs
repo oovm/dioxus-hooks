@@ -3,17 +3,19 @@ use super::*;
 impl Default for WindowSizeData {
     fn default() -> Self {
         // used for ssr
+        const MISSING_W: f64 = 375.0;
+        const MISSING_H: f64 = 812.0;
         Self { x: MISSING_W, y: MISSING_H }
     }
 }
 
-impl Default for WindowSize {
+impl Default for UseWindowSize {
     fn default() -> Self {
         Self { data: Rc::new(RefCell::new(Default::default())), listen_window: None }
     }
 }
 
-impl Debug for WindowSize {
+impl Debug for UseWindowSize {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("WindowSize")
             .field("width", &self.width())
@@ -24,7 +26,7 @@ impl Debug for WindowSize {
     }
 }
 
-impl Display for WindowSize {
+impl Display for UseWindowSize {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         f.debug_tuple("").field(&self.width()).field(&self.height()).finish()
     }
