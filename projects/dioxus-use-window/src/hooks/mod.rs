@@ -1,26 +1,22 @@
 // #![deny(missing_doc_code_examples)]
 mod builder;
-mod display;
-mod methods;
-mod use_window;
-mod use_width;
 mod use_height;
 mod use_layout;
+mod use_width;
+mod use_window;
 
-pub use self::builder::UseWindowBuilder;
+pub use self::{builder::UseWindowBuilder, use_window::WindowSize};
 use dioxus::core::ScopeState;
 use gloo_events::EventListener;
 use log::info;
 use std::{
     cell::RefCell,
-    fmt::{Display, Formatter},
+    fmt::{Debug, Display, Formatter},
     marker::PhantomData,
     rc::Rc,
 };
-
 use wasm_bindgen::JsValue;
-use web_sys::window;
-pub use self::use_window::WindowSize;
+use web_sys::{window, EventTarget, Window};
 
 const MISSING_W: f64 = 375.0;
 const MISSING_H: f64 = 812.0;

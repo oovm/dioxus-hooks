@@ -2,11 +2,7 @@ use super::*;
 
 impl Default for UseHover {
     fn default() -> Self {
-        Self {
-            data: Rc::new(RefCell::new(Default::default())),
-            listen_mouse_over: None,
-            listen_mouse_out: None
-        }
+        Self { data: Rc::new(RefCell::new(Default::default())), listen_mouse_over: None, listen_mouse_out: None }
     }
 }
 

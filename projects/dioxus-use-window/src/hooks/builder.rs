@@ -7,24 +7,9 @@ pub struct UseWindowBuilder {
     missing_y: usize,
 }
 
-
-
 impl Default for UseWindowBuilder {
     fn default() -> Self {
         Self { missing_x: 375, missing_y: 812 }
-    }
-}
-
-impl Default for WindowSizeData {
-    fn default() -> Self {
-        // used for ssr
-        Self { x: MISSING_W, y: MISSING_H }
-    }
-}
-
-impl Default for WindowSize {
-    fn default() -> Self {
-        Self { data: Rc::new(RefCell::new(Default::default())), listen_window: None }
     }
 }
 
