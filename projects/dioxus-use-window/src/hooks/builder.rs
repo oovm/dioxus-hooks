@@ -1,4 +1,5 @@
 use super::*;
+use crate::ResponsiveLayout;
 
 /// Build window size hook with config
 #[derive(Debug, Copy, Clone)]
@@ -20,19 +21,19 @@ impl UseWindowBuilder {
     ///
     /// # Arguments
     ///
-    /// returns: [`WindowSize`]
+    /// returns: [`UseWindowSize`]
     ///
     /// # Examples
     ///
     /// ```
     /// use dioxus::prelude::*;
-    /// use dioxus_use_window::use_window_size;
+    /// use dioxus_use_window::{UseWindowBuilder};
     ///
     /// fn App(cx: Scope) -> Element {
-    ///     let size = use_window_size(&cx);
+    ///     let hook = UseWindowBuilder::default().use_size(&cx);
     ///
     ///     cx.render(rsx!(
-    ///         h1 { "Window size: {size}" }
+    ///         h1 { "Window size: {hook}" }
     ///     ))
     /// }
     /// ```
@@ -40,71 +41,71 @@ impl UseWindowBuilder {
         let hook = self.hook_window_size(cx);
         cx.use_hook(|_| hook)
     }
-    /// hooks for window's size with config
+    /// hooks for window's width with config
     ///
     /// # Arguments
     ///
-    /// returns: [`WindowSize`]
+    /// returns: [`UseWindowWidth`]
     ///
     /// # Examples
     ///
     /// ```
     /// use dioxus::prelude::*;
-    /// use dioxus_use_window::use_window_size;
+    /// use dioxus_use_window::{UseWindowBuilder};
     ///
     /// fn App(cx: Scope) -> Element {
-    ///     let size = use_window_size(&cx);
+    ///     let hook = UseWindowBuilder::default().use_width(&cx);
     ///
     ///     cx.render(rsx!(
-    ///         h1 { "Window size: {size}" }
+    ///         h1 { "Window width: {hook}" }
     ///     ))
     /// }
     /// ```
     pub fn use_width<'a>(&self, cx: &'a ScopeState) -> &'a mut UseWindowWidth {
-        let hook = UseWindowWidth { inner: self.hook_window_size(cx) };
+        let hook = UseWindowWidth::new(self.hook_window_size(cx));
         cx.use_hook(|_| hook)
     }
-    /// hooks for window's size with config
+    /// hooks for window's height with config
     ///
     /// # Arguments
     ///
-    /// returns: [`WindowSize`]
+    /// returns: [`UseWindowHeight`]
     ///
     /// # Examples
     ///
     /// ```
     /// use dioxus::prelude::*;
-    /// use dioxus_use_window::use_window_size;
+    /// use dioxus_use_window::{UseWindowBuilder};
     ///
     /// fn App(cx: Scope) -> Element {
-    ///     let size = use_window_size(&cx);
+    ///     let hook = UseWindowBuilder::default().use_height(&cx);
     ///
     ///     cx.render(rsx!(
-    ///         h1 { "Window size: {size}" }
+    ///         h1 { "Window height: {hook}" }
     ///     ))
     /// }
     /// ```
     pub fn use_height<'a>(&self, cx: &'a ScopeState) -> &'a mut UseWindowHeight {
-        let hook = UseWindowHeight { inner: self.hook_window_size(cx) };
+        let hook = UseWindowHeight::new(self.hook_window_size(cx));
         cx.use_hook(|_| hook)
     }
-    /// hooks for window's size with config
+    /// hooks for window's layout with config
     ///
     /// # Arguments
     ///
-    /// returns: [`WindowSize`]
+    /// returns: [`UseWindowLayout`]
     ///
     /// # Examples
     ///
     /// ```
     /// use dioxus::prelude::*;
-    /// use dioxus_use_window::use_window_size;
+    /// use dioxus_use_window::{ResponsiveLayout, UseWindowBuilder};
     ///
     /// fn App(cx: Scope) -> Element {
-    ///     let size = use_window_size(&cx);
+    ///     let hook = UseWindowBuilder::default().use_layout::<ResponsiveLayout>(&cx);
     ///
     ///     cx.render(rsx!(
-    ///         h1 { "Window size: {size}" }
+    ///         h1 { "Window layout: {hook}" }
     ///     ))
     /// }
     /// ```
@@ -112,8 +113,32 @@ impl UseWindowBuilder {
     where
         T: 'static,
     {
-        let hook = UseWindowLayout { inner: self.hook_window_size(cx), bound: Default::default() };
+        let hook = UseWindowLayout::new(self.hook_window_size(cx));
         cx.use_hook(|_| hook)
+    }
+    /// hooks for window's responsive layout with config
+    ///
+    /// # Arguments
+    ///
+    /// returns: [`UseWindowLayout`]
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use dioxus::prelude::*;
+    /// use dioxus_use_window::{ResponsiveLayout, UseWindowBuilder};
+    ///
+    /// fn App(cx: Scope) -> Element {
+    ///     let hook = UseWindowBuilder::default().use_responsive_layout(&cx);
+    ///
+    ///     cx.render(rsx!(
+    ///         h1 { "Window layout: {hook}" }
+    ///     ))
+    /// }
+    /// ```
+    #[inline]
+    pub fn use_responsive_layout<'a>(&self, cx: &'a ScopeState) -> &'a mut UseWindowLayout<ResponsiveLayout> {
+        self.use_layout(cx)
     }
 }
 

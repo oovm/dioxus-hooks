@@ -33,8 +33,8 @@ impl UseCursorBuilder {
     ///     ))
     /// }
     /// ```
-    pub fn use_cursor<'a>(&self, cx: &'a ScopeState) -> &'a mut UseCursor {
-        let hook = UseCursor::new(cx).unwrap_or_default();
+    pub fn use_cursor<'a>(&self, cx: &'a ScopeState) -> &'a mut UseLocalStorage {
+        let hook = UseLocalStorage::new(cx).unwrap_or_default();
         cx.use_hook(|_| hook)
     }
     /// hooks for window's size with config

@@ -4,7 +4,7 @@ mod use_cursor;
 mod use_hover;
 // mod use_focus;
 // mod use_hovering;
-pub use self::{builder::UseCursorBuilder, use_cursor::UseCursor, use_hover::UseHover};
+pub use self::{builder::UseCursorBuilder, use_cursor::UseLocalStorage, use_hover::UseHover};
 use dioxus::{core::ScopeState, events::MouseData};
 use gloo_events::EventListener;
 use log::info;
@@ -37,7 +37,7 @@ use web_sys::{window, Event, EventTarget, MouseEvent};
 /// }
 /// ```
 #[inline]
-pub fn use_cursor(cx: &ScopeState) -> &UseCursor {
+pub fn use_cursor(cx: &ScopeState) -> &UseLocalStorage {
     UseCursorBuilder::default().use_cursor(cx)
 }
 

@@ -4,3 +4,9 @@ impl Display for UseWindowWidth {
         Display::fmt(&self.get(), f)
     }
 }
+
+impl From<UseWindowSize> for UseWindowWidth {
+    fn from(size: UseWindowSize) -> Self {
+        Self::new(size)
+    }
+}

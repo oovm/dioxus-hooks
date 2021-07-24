@@ -1,4 +1,4 @@
-// #![deny(missing_doc_code_examples)]
+#![allow(non_snake_case)]
 mod builder;
 mod use_height;
 mod use_layout;
@@ -6,7 +6,11 @@ mod use_width;
 mod use_window;
 
 use self::use_window::WindowSizeData;
-pub use self::{builder::UseWindowBuilder, use_window::UseWindowSize};
+pub use self::{
+    builder::UseWindowBuilder, use_height::UseWindowHeight, use_layout::UseWindowLayout, use_width::UseWindowWidth,
+    use_window::UseWindowSize,
+};
+use crate::ResponsiveLayout;
 use dioxus::core::ScopeState;
 use gloo_events::EventListener;
 use log::info;
@@ -18,8 +22,6 @@ use std::{
 };
 use wasm_bindgen::JsValue;
 use web_sys::{window, Window};
-use crate::hooks::use_layout::UseWindowLayout;
-use crate::hooks::use_width::UseWindowWidth;
 
 /// hooks for window's size
 ///
@@ -46,36 +48,6 @@ pub fn use_window_size(cx: &ScopeState) -> &mut UseWindowSize {
     UseWindowBuilder::default().use_size(cx)
 }
 
-/// hooks for window's layout
-///
-/// # Arguments
-///
-/// * `layout`: [`ResponsiveLayout`]
-///
-/// returns: [`WindowLayout`]
-///
-/// # Examples
-///
-/// ```
-/// use dioxus::prelude::*;
-/// use dioxus_use_window::{use_window_layout, ResponsiveLayout};
-///
-/// fn App(cx: Scope) -> Element {
-///     let layout = use_window_layout::<ResponsiveLayout>(&cx);
-///
-///     cx.render(rsx!(
-///         h1 { "Window layout: {layout}" }
-///     ))
-/// }
-/// ```
-pub fn use_window_layout<T>(cx: &ScopeState) -> &UseWindowLayout<T>
-where
-    T: From<usize>,
-    T: 'static,
-{
-    UseWindowBuilder::default().use_layout(cx)
-}
-
 /// hooks for window's width
 ///
 /// # Arguments
@@ -96,11 +68,10 @@ where
 ///     ))
 /// }
 /// ```
+#[inline]
 pub fn use_window_width(cx: &ScopeState) -> &UseWindowWidth {
     UseWindowBuilder::default().use_width(cx)
 }
-
-
 
 /// hooks for window's height
 ///
@@ -122,6 +93,61 @@ pub fn use_window_width(cx: &ScopeState) -> &UseWindowWidth {
 ///     ))
 /// }
 /// ```
+#[inline]
 pub fn use_window_height(cx: &ScopeState) -> &UseWindowHeight {
     UseWindowBuilder::default().use_height(cx)
+}
+
+/// hooks for window's layout
+///
+/// # Arguments
+///
+/// returns: [`WindowLayout`]
+///
+/// # Examples
+///
+/// ```
+/// use dioxus::prelude::*;
+/// use dioxus_use_window::{ResponsiveLayout, use_window_layout};
+///
+/// fn App(cx: Scope) -> Element {
+///     let layout = use_window_layout::<ResponsiveLayout>(&cx);
+///
+///     cx.render(rsx!(
+///         h1 { "Window layout: {layout}" }
+///     ))
+/// }
+/// ```
+#[inline]
+pub fn use_window_layout<T>(cx: &ScopeState) -> &UseWindowLayout<T>
+where
+    T: From<usize>,
+    T: 'static,
+{
+    UseWindowBuilder::default().use_layout(cx)
+}
+
+/// hooks for window's layout
+///
+/// # Arguments
+///
+/// returns: [`WindowLayout`]
+///
+/// # Examples
+///
+/// ```
+/// use dioxus::prelude::*;
+/// use dioxus_use_window::{use_responsive_layout};
+///
+/// fn App(cx: Scope) -> Element {
+///     let layout = use_responsive_layout(&cx);
+///
+///     cx.render(rsx!(
+///         h1 { "Window layout: {layout}" }
+///     ))
+/// }
+/// ```
+#[inline]
+pub fn use_responsive_layout<T>(cx: &ScopeState) -> &UseWindowLayout<ResponsiveLayout> {
+    UseWindowBuilder::default().use_responsive_layout(cx)
 }

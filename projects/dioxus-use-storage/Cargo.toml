@@ -1,10 +1,10 @@
 [package]
-name = "dioxus-use-window"
-version = "0.6.1"
+name = "dioxus-use-storage"
+version = "0.2.0"
 authors = ["Aster <192607617@qq.com>"]
-description = "`use_window` hooks for dioxus"
+description = "`use_storage` hooks for dioxus"
 repository = "https://github.com/oovm/dioxus-hooks"
-documentation = "https://docs.rs/dioxus-use-window"
+documentation = "https://docs.rs/dioxus-use-storage"
 readme = "Readme.md"
 license = "MPL-2.0"
 edition = "2021"
@@ -17,7 +17,7 @@ wasm-bindgen = "0.2.79"
 
 [dependencies.web-sys]
 version = "0.3.56"
-features = ["Window"]
+features = ["Window", "Storage"]
 
 
 [dev-dependencies]

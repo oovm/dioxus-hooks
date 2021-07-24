@@ -89,16 +89,16 @@ impl UseWindowSize {
     /// using as [`WindowWidth`]
     #[inline]
     pub fn as_width(self) -> UseWindowWidth {
-        UseWindowWidth { inner: self }
+        UseWindowWidth::new(self)
     }
     /// using as [`WindowHeight`]
     #[inline]
     pub fn as_height(self) -> UseWindowHeight {
-        UseWindowHeight { inner: self }
+        UseWindowHeight::new(self)
     }
     /// using as [`WindowLayout`]
     #[inline]
     pub fn as_layout<T>(self) -> UseWindowLayout<T> {
-        UseWindowLayout { inner: self, bound: Default::default() }
+        UseWindowLayout::new(self)
     }
 }

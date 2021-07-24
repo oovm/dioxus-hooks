@@ -8,6 +8,12 @@ pub struct UseWindowWidth {
 }
 
 impl UseWindowWidth {
+    pub(crate) fn new(size: UseWindowSize) -> Self {
+        Self { inner: size }
+    }
+}
+
+impl UseWindowWidth {
     /// get width of current window
     #[inline]
     pub fn get(&self) -> usize {

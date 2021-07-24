@@ -9,3 +9,9 @@ where
         Display::fmt(&self.get(), f)
     }
 }
+
+impl<T> From<UseWindowSize> for UseWindowLayout<T> {
+    fn from(size: UseWindowSize) -> Self {
+        Self::new(size)
+    }
+}
