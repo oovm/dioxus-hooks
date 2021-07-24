@@ -39,6 +39,6 @@ impl Debug for UseLocalStorage {
 
 impl Display for UseLocalStorage {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        f.debug_tuple("").field(&self.screen_x()).field(&self.screen_y()).finish()
+        f.debug_tuple("").field(&self.get()).field(&self.get_index()).finish()
     }
 }

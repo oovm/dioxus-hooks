@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 mod builder;
-mod use_cursor;
-mod use_hover;
+mod use_local_storage;
+mod use_session_storage;
 // mod use_focus;
 // mod use_hovering;
 pub use self::{builder::UseCursorBuilder, use_cursor::UseLocalStorage, use_hover::UseHover};

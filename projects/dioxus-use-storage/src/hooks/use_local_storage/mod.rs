@@ -1,5 +1,8 @@
 mod display;
 
+use std::collections::BTreeMap;
+use wasm_bindgen::JsValue;
+use web_sys::{Storage, StorageEvent};
 use super::*;
 
 /// effect handler
@@ -9,7 +12,8 @@ pub struct UseLocalStorage {
 }
 
 struct UseLocalStorageData {
-    mouse: MouseData,
+    storage: Storage,
+    last_event: Option<StorageEvent>,
 }
 
 impl UseLocalStorage {
@@ -17,9 +21,9 @@ impl UseLocalStorage {
     pub(crate) fn new(cx: &ScopeState) -> Option<Self> {
         let storage = window()?.local_storage().ok()??;
 
-        storage.get();
+        storage.key();
 
-        storage.set_item()
+        storage.get_item()
 
         let data = Rc::new(RefCell::new(UseLocalStorageData::default()));
         let setter = data.clone();
@@ -48,32 +52,47 @@ impl UseLocalStorage {
             shift_key: e.shift_key(),
         }
     }
-    fn on_change() {
+    fn on_storage(cx: &ScopeState, target: &EventTarget, data: &Rc<RefCell<UseHoverData>>) -> EventListener {
+        #[cfg(debug_assertions)]
+            {
+                info!("Window Storage Listener Initialized at {}!", cx.scope_id().0);
+            }
+        let setter = data.clone();
+        let regenerate = cx.schedule_update();
+        EventListener::new(target, "storage", move |e| {
+            let mut setter = setter.borrow_mut();
+            e.unchecked_into()
+
+            setter.hover = true;
+            regenerate()
+        })
+    }
+    fn as_storage_event(&e) {
 
     }
 }
 
+
 impl UseLocalStorage {
     /// Getter for the screenX field of this object.
-    pub fn screen_x(&self) -> usize {
-        self.data.borrow().mouse.screen_x as _
+    pub fn get(&self, key: &str) -> Option<String> {
+        self.data.borrow().storage.get_item(key).ok()?
+    }
+    /// Getter for the screenX field of this object.
+    pub fn insert(&self, key: &str, value:&str) -> bool {
+        self.data.borrow().storage.set_item(key, value).is_ok()
     }
     ///
-    pub fn screen_y(&self) -> usize {
-        self.data.borrow().mouse.screen_y as _
+    pub fn get_index(&self, index: usize) -> Option<String> {
+        self.data.borrow().storage.key(index as _).ok()?
     }
     ///
-    // pub fn element_width(&self) -> usize {
-    //     self.view_mouse().map(|e| e.page_x()).unwrap_or_default() as _
-    // }
-    // ///
-    // pub fn element_height(&self) -> usize {
-    //     self.view_mouse().map(|e| e.element_height()).unwrap_or_default() as _
-    // }
+    pub fn remove(&self, key: &str) {
+        let map = BTreeMap::default();
+        self.data.borrow().storage.remove_item(index as _).ok()?
+    }
     ///
-    pub fn is_over(&self) {}
-    ///
-    pub fn is_down(&self) {}
+    pub fn clear(&self) {}
 
     // #[inline]
     // fn view_mouse(&self) -> Option<&MouseEvent> {
