@@ -2,15 +2,15 @@ use super::*;
 
 ///
 #[derive(Debug, Copy, Clone)]
-pub struct UseCursorBuilder {}
+pub struct UseStorageBuilder {}
 
-impl Default for UseCursorBuilder {
+impl Default for UseStorageBuilder {
     fn default() -> Self {
         Self {}
     }
 }
 
-impl UseCursorBuilder {
+impl UseStorageBuilder {
     /// hooks for window's size with config
     ///
     /// # Arguments
@@ -59,8 +59,8 @@ impl UseCursorBuilder {
     ///     ))
     /// }
     /// ```
-    pub fn use_hover<'a>(&self, cx: &'a ScopeState) -> &'a mut UseHover {
-        let hook = UseHover::new(cx, todo!());
+    pub fn use_local_storage<'a>(&self, cx: &'a ScopeState) -> &'a mut UseLocalStorage {
+        let hook = UseLocalStorage::new(cx).unwrap_or(UseLocalStorage::new_ssr(cx));
         cx.use_hook(|_| hook)
     }
 }

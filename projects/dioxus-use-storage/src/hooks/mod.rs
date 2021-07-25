@@ -2,9 +2,10 @@
 mod builder;
 mod use_local_storage;
 mod use_session_storage;
+mod storage_iter;
 // mod use_focus;
 // mod use_hovering;
-pub use self::{builder::UseCursorBuilder, use_cursor::UseLocalStorage, use_hover::UseHover};
+pub use self::{builder::UseStorageBuilder, use_local_storage::UseLocalStorage};
 use dioxus::{core::ScopeState, events::MouseData};
 use gloo_events::EventListener;
 use log::info;
@@ -14,7 +15,8 @@ use std::{
     rc::Rc,
 };
 use wasm_bindgen::JsCast;
-use web_sys::{window, Event, EventTarget, MouseEvent};
+use web_sys::{window, Event, EventTarget};
+pub use storage_iter::*;
 
 /// hooks for window's size
 ///
@@ -38,7 +40,7 @@ use web_sys::{window, Event, EventTarget, MouseEvent};
 /// ```
 #[inline]
 pub fn use_cursor(cx: &ScopeState) -> &UseLocalStorage {
-    UseCursorBuilder::default().use_cursor(cx)
+    UseStorageBuilder::default().use_cursor(cx)
 }
 
 /// hooks for window's size
@@ -51,10 +53,10 @@ pub fn use_cursor(cx: &ScopeState) -> &UseLocalStorage {
 ///
 /// ```
 /// use dioxus::prelude::*;
-/// use dioxus_use_cursor::{use_hover};
+/// use dioxus_use_storage::{use_local_storage};
 ///
 /// fn App(cx: Scope) -> Element {
-///     let hover = use_hover(&cx);
+///     let hover = use_local_storage(&cx);
 ///
 ///     cx.render(rsx!(
 ///         h1 { "Hover: {hover}" }
@@ -62,6 +64,6 @@ pub fn use_cursor(cx: &ScopeState) -> &UseLocalStorage {
 /// }
 /// ```
 #[inline]
-pub fn use_hover(cx: &ScopeState) -> &UseHover {
-    UseCursorBuilder::default().use_hover(cx)
+pub fn use_local_storage(cx: &ScopeState) -> &UseLocalStorage {
+    UseStorageBuilder::default().use_local_storage(cx)
 }

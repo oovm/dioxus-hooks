@@ -1,5 +1,6 @@
 mod display;
 
+use web_sys::Window;
 use super::*;
 
 /// effect handler
@@ -17,31 +18,35 @@ impl UseCursor {
     pub(crate) fn new(cx: &ScopeState) -> Option<Self> {
         let window = window()?;
         let data = Rc::new(RefCell::new(UseCursorData::default()));
-        let setter = data.clone();
-        let regenerate = cx.schedule_update();
-        let mouse_move = EventListener::new(&window, "mousemove", move |e| {
-            let mut setter = setter.borrow_mut();
-            setter.mouse = Self::event_as_mouse_data(e);
-            regenerate();
-        });
+        let mouse_move = Self::on_mouse_move(cx, &window, &data);
         Some(Self { data, listen_mouse_move: Some(mouse_move) })
     }
-    fn event_as_mouse_data(event: &Event) -> MouseData {
-        let e: &MouseEvent = event.unchecked_ref();
-        MouseData {
-            alt_key: e.alt_key(),
-            button: e.button(),
-            buttons: e.buttons(),
-            client_x: e.client_x(),
-            client_y: e.client_y(),
-            ctrl_key: e.ctrl_key(),
-            meta_key: e.meta_key(),
-            page_x: e.page_x(),
-            page_y: e.page_y(),
-            screen_x: e.screen_x(),
-            screen_y: e.screen_y(),
-            shift_key: e.shift_key(),
-        }
+    fn on_mouse_move(cx: &ScopeState, window: &Window, data: &Rc<RefCell<UseLocalStorageData>>) -> EventListener {
+        #[cfg(debug_assertions)]
+            {
+                info!("Window Mouse move Listener Initialized at {}!", cx.scope_id().0);
+            }
+        let setter = data.clone();
+        let regenerate = cx.schedule_update();
+        EventListener::new(&window, "mousemove", move |e| {
+            let mut setter = setter.borrow_mut();
+            let e: &MouseEvent = event.unchecked_ref();
+            setter.mouse = MouseData {
+                alt_key: e.alt_key(),
+                button: e.button(),
+                buttons: e.buttons(),
+                client_x: e.client_x(),
+                client_y: e.client_y(),
+                ctrl_key: e.ctrl_key(),
+                meta_key: e.meta_key(),
+                page_x: e.page_x(),
+                page_y: e.page_y(),
+                screen_x: e.screen_x(),
+                screen_y: e.screen_y(),
+                shift_key: e.shift_key(),
+            };
+            regenerate();
+        })
     }
 }
 
