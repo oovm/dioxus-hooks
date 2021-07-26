@@ -39,9 +39,7 @@ impl<'a> Iterator for StorageIter<'a> {
 
 pub(crate) fn storage_eq(owned: &Option<Storage>, event: &Option<Storage>) -> bool {
     match (owned, event) {
-        (Some(lhs), Some(rhs)) => {
-            lhs.eq(&rhs)
-        }
-        _ => false
+        (Some(lhs), Some(rhs)) => lhs.eq(&rhs),
+        _ => false,
     }
 }

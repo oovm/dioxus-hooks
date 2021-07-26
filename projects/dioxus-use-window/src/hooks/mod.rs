@@ -148,6 +148,6 @@ where
 /// }
 /// ```
 #[inline]
-pub fn use_responsive_layout<T>(cx: &ScopeState) -> &UseWindowLayout<ResponsiveLayout> {
+pub fn use_responsive_layout(cx: &ScopeState) -> &UseWindowLayout<ResponsiveLayout> {
     UseWindowBuilder::default().use_responsive_layout(cx)
 }

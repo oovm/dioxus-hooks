@@ -22,7 +22,7 @@ impl Display for UseHtmlLanguage {
 
 impl UseHtmlLanguageData {
     fn get_lang(&self) -> Option<String> {
-        self.html.get_attribute("lang").or(self.html.get_attribute("xml:lang"))
+        self.html.get_attribute("lang").or_else(|| self.html.get_attribute("xml:lang"))
     }
     fn set_lang(&self, lang: &str) -> Option<()> {
         self.html.remove_attribute("xml:lang").ok();

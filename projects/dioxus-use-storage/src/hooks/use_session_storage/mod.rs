@@ -2,6 +2,7 @@ mod display;
 mod iter;
 
 use super::*;
+use log::warn;
 
 /// effect handler
 #[allow(dead_code)]
@@ -26,7 +27,11 @@ impl UseSessionStorage {
         Some(Self { data, listen_storage: Some(listen_storage) })
     }
     #[inline]
-    pub(crate) fn new_ssr(_: &ScopeState) -> Self {
+    pub(crate) fn new_ssr(cx: &ScopeState) -> Self {
+        #[cfg(debug_assertions)]
+        {
+            warn!("Window Storage Listener Initializing failed at {}!", cx.scope_id().0);
+        }
         Self::default()
     }
     fn on_storage(cx: &ScopeState, window: &Window, data: &Rc<RefCell<UseLocalSessionData>>) -> EventListener {

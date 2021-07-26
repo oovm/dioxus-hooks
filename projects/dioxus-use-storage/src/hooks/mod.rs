@@ -5,7 +5,6 @@ mod storage_iter;
 mod use_local_storage;
 mod use_session_storage;
 
-use storage_iter::storage_eq;
 pub use self::{builder::UseStorageBuilder, use_local_storage::UseLocalStorage};
 use crate::hooks::use_session_storage::UseSessionStorage;
 use dioxus::core::ScopeState;
@@ -17,6 +16,7 @@ use std::{
     marker::PhantomData,
     rc::Rc,
 };
+use storage_iter::storage_eq;
 pub use storage_iter::*;
 use wasm_bindgen::JsCast;
 use web_sys::{window, Storage, StorageEvent, Window};

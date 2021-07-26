@@ -4,8 +4,8 @@
 #![doc = include_str ! ("../Readme.md")]
 
 pub use dioxus_use_cursor::*;
-pub use dioxus_use_window::*;
 pub use dioxus_use_storage::*;
+pub use dioxus_use_window::*;
 
 #[cfg(feature = "unstable")]
 mod unstable_api {

@@ -1,4 +1,5 @@
 use super::*;
+use log::warn;
 
 mod display;
 
@@ -21,7 +22,11 @@ impl UseWindowSize {
         let listener = Self::on_window_resize(cx, &window, &data);
         Some(Self { data, listen_window: Some(listener) })
     }
-    pub(crate) fn new_ssr(_: &ScopeState, data: WindowSizeData) -> Self {
+    pub(crate) fn new_ssr(cx: &ScopeState, data: WindowSizeData) -> Self {
+        #[cfg(debug_assertions)]
+        {
+            warn!("Window Resize Listener Initializing failed at {}!", cx.scope_id().0);
+        }
         let data = Rc::new(RefCell::new(data));
         Self { data, listen_window: None }
     }

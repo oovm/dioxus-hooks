@@ -33,7 +33,7 @@ impl UseStorageBuilder {
     /// }
     /// ```
     pub fn use_local_storage<'a>(&self, cx: &'a ScopeState) -> &'a mut UseLocalStorage {
-        let hook = UseLocalStorage::new(cx).unwrap_or(UseLocalStorage::new_ssr(cx));
+        let hook = UseLocalStorage::new(cx).unwrap_or_else(|| UseLocalStorage::new_ssr(cx));
         cx.use_hook(|_| hook)
     }
     /// hooks for window's size with config

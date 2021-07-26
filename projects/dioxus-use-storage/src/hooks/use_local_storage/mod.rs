@@ -2,6 +2,7 @@ mod display;
 mod iter;
 
 use super::*;
+use log::warn;
 
 /// effect handler
 #[allow(dead_code)]
@@ -25,29 +26,31 @@ impl UseLocalStorage {
         Some(Self { data, listen_storage: Some(listen_storage) })
     }
     #[inline]
-    pub(crate) fn new_ssr(_: &ScopeState) -> Self {
+    pub(crate) fn new_ssr(cx: &ScopeState) -> Self {
+        #[cfg(debug_assertions)]
+        {
+            warn!("Window Storage Listener Initializing failed at {}!", cx.scope_id().0);
+        }
         Self::default()
     }
     fn on_storage(cx: &ScopeState, window: &Window, data: &Rc<RefCell<UseLocalStorageData>>) -> EventListener {
         #[cfg(debug_assertions)]
-            {
-                info!("Window Storage Listener Initialized at {}!", cx.scope_id().0);
-            }
+        {
+            info!("Window Storage Listener Initialized at {}!", cx.scope_id().0);
+        }
         let setter = data.clone();
         let regenerate = cx.schedule_update();
         EventListener::new(window, "storage", move |e| {
             let e: StorageEvent = e.clone().unchecked_into();
             let mut setter = setter.borrow_mut();
             if !storage_eq(&setter.storage, &e.storage_area()) {
-                return
+                return;
             }
             setter.last_event = Some(e);
             regenerate()
         })
     }
 }
-
-
 
 impl UseLocalStorage {
     /// Getter for the screenX field of this object.
