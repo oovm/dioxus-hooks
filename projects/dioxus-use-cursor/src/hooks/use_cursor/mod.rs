@@ -1,7 +1,7 @@
 mod display;
 
-use web_sys::Window;
 use super::*;
+use web_sys::Window;
 
 /// effect handler
 pub struct UseCursor {
@@ -21,16 +21,16 @@ impl UseCursor {
         let mouse_move = Self::on_mouse_move(cx, &window, &data);
         Some(Self { data, listen_mouse_move: Some(mouse_move) })
     }
-    fn on_mouse_move(cx: &ScopeState, window: &Window, data: &Rc<RefCell<UseLocalStorageData>>) -> EventListener {
+    fn on_mouse_move(cx: &ScopeState, window: &Window, data: &Rc<RefCell<UseCursorData>>) -> EventListener {
         #[cfg(debug_assertions)]
-            {
-                info!("Window Mouse move Listener Initialized at {}!", cx.scope_id().0);
-            }
+        {
+            info!("Window Mouse move Listener Initialized at {}!", cx.scope_id().0);
+        }
         let setter = data.clone();
         let regenerate = cx.schedule_update();
         EventListener::new(&window, "mousemove", move |e| {
             let mut setter = setter.borrow_mut();
-            let e: &MouseEvent = event.unchecked_ref();
+            let e: &MouseEvent = e.unchecked_ref();
             setter.mouse = MouseData {
                 alt_key: e.alt_key(),
                 button: e.button(),

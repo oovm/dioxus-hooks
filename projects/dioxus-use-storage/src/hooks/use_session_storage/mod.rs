@@ -1,58 +1,93 @@
 mod display;
+mod iter;
 
 use super::*;
 
-///
-pub struct UseHover {
-    data: Rc<RefCell<UseHoverData>>,
-    listen_mouse_over: Option<EventListener>,
-    listen_mouse_out: Option<EventListener>,
+/// effect handler
+#[allow(dead_code)]
+pub struct UseSessionStorage {
+    data: Rc<RefCell<UseLocalSessionData>>,
+    listen_storage: Option<EventListener>,
 }
 
-#[derive(Debug, Clone)]
-struct UseHoverData {
-    hover: bool,
+#[allow(dead_code)]
+struct UseLocalSessionData {
+    storage: Option<Storage>,
+    last_event: Option<StorageEvent>,
 }
 
-impl UseHover {
-    pub(crate) fn new(cx: &ScopeState, target: &EventTarget) -> Self {
-        let data = Rc::new(RefCell::new(UseHoverData::default()));
-        let listen_mouse_over = Some(Self::on_mouse_over(cx, target, &data));
-        let listen_mouse_out = Some(Self::on_mouse_out(cx, target, &data));
-        Self { data, listen_mouse_over, listen_mouse_out }
+impl UseSessionStorage {
+    /// builder of `UseCursor`
+    pub(crate) fn new(cx: &ScopeState) -> Option<Self> {
+        let window = window()?;
+        let storage = window.local_storage().ok()??;
+        let data = Rc::new(RefCell::new(UseLocalSessionData { storage: Some(storage), last_event: None }));
+        let listen_storage = Self::on_storage(cx, &window, &data);
+        Some(Self { data, listen_storage: Some(listen_storage) })
     }
-    fn on_mouse_over(cx: &ScopeState, target: &EventTarget, data: &Rc<RefCell<UseHoverData>>) -> EventListener {
-        #[cfg(debug_assertions)]
-        {
-            info!("Mouse Over Listener Initialized at {}!", cx.scope_id().0);
-        }
-        let setter = data.clone();
-        let regenerate = cx.schedule_update();
-        EventListener::new(target, "mouseover", move |_| {
-            let mut setter = setter.borrow_mut();
-            setter.hover = true;
-            regenerate()
-        })
-    }
-    fn on_mouse_out(cx: &ScopeState, target: &EventTarget, data: &Rc<RefCell<UseHoverData>>) -> EventListener {
-        #[cfg(debug_assertions)]
-        {
-            info!("Mouse Out Listener Initialized at {}!", cx.scope_id().0);
-        }
-        let setter = data.clone();
-        let regenerate = cx.schedule_update();
-        EventListener::new(target, "mouseout", move |_| {
-            let mut setter = setter.borrow_mut();
-            setter.hover = false;
-            regenerate()
-        })
-    }
-}
-
-impl UseHover {
-    /// check if the target is hovering
     #[inline]
-    pub fn get(&self) -> bool {
-        self.data.borrow().hover
+    pub(crate) fn new_ssr(_: &ScopeState) -> Self {
+        Self::default()
+    }
+    fn on_storage(cx: &ScopeState, window: &Window, data: &Rc<RefCell<UseLocalSessionData>>) -> EventListener {
+        #[cfg(debug_assertions)]
+        {
+            info!("Window Storage Listener Initialized at {}!", cx.scope_id().0);
+        }
+        let setter = data.clone();
+        let regenerate = cx.schedule_update();
+        EventListener::new(window, "storage", move |e| {
+            let e: StorageEvent = e.clone().unchecked_into();
+            // FIXME: find which storage changed
+            // e.storage_area();
+            let mut setter = setter.borrow_mut();
+            setter.last_event = Some(e);
+            regenerate()
+        })
+    }
+}
+
+impl UseSessionStorage {
+    /// Getter for the screenX field of this object.
+    #[inline]
+    pub fn get(&self, key: &str) -> Option<String> {
+        self.data.borrow().storage.as_ref()?.get_item(key).ok()?
+    }
+    ///
+    #[inline]
+    pub fn get_index(&self, index: usize) -> Option<String> {
+        self.data.borrow().storage.as_ref()?.key(index as _).ok()?
+    }
+    /// Getter for the screenX field of this object.
+    #[inline]
+    pub fn insert(&self, key: &str, value: &str) -> bool {
+        match &self.data.borrow().storage {
+            None => false,
+            Some(s) => s.set_item(key, value).is_ok(),
+        }
+    }
+    ///
+    #[inline]
+    pub fn remove(&self, key: &str) -> bool {
+        match &self.data.borrow().storage {
+            None => false,
+            Some(s) => s.remove_item(key).is_ok(),
+        }
+    }
+    ///
+    #[inline]
+    pub fn len(&self) -> usize {
+        match &self.data.borrow().storage {
+            None => 0,
+            Some(s) => s.length().unwrap_or(0) as _,
+        }
+    }
+    ///
+    #[inline]
+    pub fn clear(&self) -> bool {
+        match &self.data.borrow().storage {
+            None => false,
+            Some(s) => s.clear().is_ok(),
+        }
     }
 }

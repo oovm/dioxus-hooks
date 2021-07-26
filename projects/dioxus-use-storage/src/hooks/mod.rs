@@ -1,53 +1,31 @@
 #![allow(non_snake_case)]
+
 mod builder;
+mod storage_iter;
 mod use_local_storage;
 mod use_session_storage;
-mod storage_iter;
-// mod use_focus;
-// mod use_hovering;
+
+use storage_iter::storage_eq;
 pub use self::{builder::UseStorageBuilder, use_local_storage::UseLocalStorage};
-use dioxus::{core::ScopeState, events::MouseData};
+use crate::hooks::use_session_storage::UseSessionStorage;
+use dioxus::core::ScopeState;
 use gloo_events::EventListener;
 use log::info;
 use std::{
     cell::RefCell,
     fmt::{Debug, Display, Formatter},
+    marker::PhantomData,
     rc::Rc,
 };
-use wasm_bindgen::JsCast;
-use web_sys::{window, Event, EventTarget};
 pub use storage_iter::*;
+use wasm_bindgen::JsCast;
+use web_sys::{window, Storage, StorageEvent, Window};
 
-/// hooks for window's size
+/// hooks for window's size with config
 ///
 /// # Arguments
 ///
-/// returns: [`UseCursor`]
-///
-/// # Examples
-///
-/// ```
-/// use dioxus::prelude::*;
-/// use dioxus_use_cursor::use_cursor;
-///
-/// fn App(cx: Scope) -> Element {
-///     let cursor = use_cursor(&cx);
-///
-///     cx.render(rsx!(
-///         h1 { "Cursor position: {cursor}" }
-///     ))
-/// }
-/// ```
-#[inline]
-pub fn use_cursor(cx: &ScopeState) -> &UseLocalStorage {
-    UseStorageBuilder::default().use_cursor(cx)
-}
-
-/// hooks for window's size
-///
-/// # Arguments
-///
-/// returns: [`UseHover`]
+/// returns: [`WindowSize`]
 ///
 /// # Examples
 ///
@@ -56,14 +34,39 @@ pub fn use_cursor(cx: &ScopeState) -> &UseLocalStorage {
 /// use dioxus_use_storage::{use_local_storage};
 ///
 /// fn App(cx: Scope) -> Element {
-///     let hover = use_local_storage(&cx);
+///     let hook = use_local_storage(&cx);
 ///
 ///     cx.render(rsx!(
-///         h1 { "Hover: {hover}" }
+///         h1 { "Local Storage: {hook}" }
 ///     ))
 /// }
 /// ```
 #[inline]
 pub fn use_local_storage(cx: &ScopeState) -> &UseLocalStorage {
     UseStorageBuilder::default().use_local_storage(cx)
+}
+
+/// hooks for window's size with config
+///
+/// # Arguments
+///
+/// returns: [`WindowSize`]
+///
+/// # Examples
+///
+/// ```
+/// use dioxus::prelude::*;
+/// use dioxus_use_storage::{use_session_storage};
+///
+/// fn App(cx: Scope) -> Element {
+///     let hook = use_session_storage(&cx);
+///
+///     cx.render(rsx!(
+///         h1 { "Local Storage: {hook}" }
+///     ))
+/// }
+/// ```
+#[inline]
+pub fn use_session_storage(cx: &ScopeState) -> &UseSessionStorage {
+    UseStorageBuilder::default().use_session_storage(cx)
 }

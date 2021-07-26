@@ -13,6 +13,7 @@ edition = "2021"
 dioxus-use-window = {version ="0.6.*", path = "../dioxus-use-window"}
 dioxus-use-clipboard = {version ="0.1.*", path = "../dioxus-use-clipboard", optional = true}
 dioxus-use-cursor = {version ="0.2.*", path = "../dioxus-use-cursor"}
+dioxus-use-storage = {version ="0.1.*", path = "../dioxus-use-storage"}
 
 [dev-dependencies]
 

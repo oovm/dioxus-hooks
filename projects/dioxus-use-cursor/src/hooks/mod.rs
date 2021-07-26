@@ -14,7 +14,7 @@ use std::{
     rc::Rc,
 };
 use wasm_bindgen::JsCast;
-use web_sys::{window, Event, EventTarget, MouseEvent};
+use web_sys::{window,  EventTarget, MouseEvent};
 
 /// hooks for window's size
 ///

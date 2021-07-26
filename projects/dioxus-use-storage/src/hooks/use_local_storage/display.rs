@@ -1,5 +1,4 @@
 use super::*;
-use std::fmt::{Debug, Display, Formatter};
 
 impl Default for UseLocalStorage {
     fn default() -> Self {
@@ -9,24 +8,19 @@ impl Default for UseLocalStorage {
 
 impl Default for UseLocalStorageData {
     fn default() -> Self {
-        Self {
-            storage: None,
-            last_event: None
-        }
+        Self { storage: None, last_event: None }
     }
 }
 
 impl Debug for UseLocalStorage {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("UseCursor")
-            .field("mouse_data", &self.data.borrow().mouse)
-            .field("listen_mouse_move", &self.listen_storage.is_some())
-            .finish()
+        f.write_str("UseLocalStorage ")?;
+        f.debug_map().entries(self.iter()).finish()
     }
 }
 
 impl Display for UseLocalStorage {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        f.debug_tuple("").field(&self.get()).field(&self.get_index()).finish()
+        f.debug_struct("UseLocalStorage").field("items", &self.len()).finish()
     }
 }

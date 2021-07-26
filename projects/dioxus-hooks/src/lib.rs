@@ -5,6 +5,7 @@
 
 pub use dioxus_use_cursor::*;
 pub use dioxus_use_window::*;
+pub use dioxus_use_storage::*;
 
 #[cfg(feature = "unstable")]
 mod unstable_api {

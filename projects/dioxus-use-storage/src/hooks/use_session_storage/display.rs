@@ -1,29 +1,26 @@
 use super::*;
 
-impl Default for UseHover {
+impl Default for UseSessionStorage {
     fn default() -> Self {
-        Self { data: Rc::new(RefCell::new(Default::default())), listen_mouse_over: None, listen_mouse_out: None }
+        Self { data: Rc::new(RefCell::new(Default::default())), listen_storage: None }
     }
 }
 
-impl Default for UseHoverData {
+impl Default for UseLocalSessionData {
     fn default() -> Self {
-        Self { hover: false }
+        Self { storage: None, last_event: None }
     }
 }
 
-impl Display for UseHover {
+impl Debug for UseSessionStorage {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        Display::fmt(&self.get(), f)
+        f.write_str("UseSessionStorage ")?;
+        f.debug_map().entries(self.iter()).finish()
     }
 }
 
-impl Debug for UseHover {
+impl Display for UseSessionStorage {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("WindowSize")
-            .field("is_hover", &self.get())
-            .field("listen_mouse_over", &self.listen_mouse_over.is_some())
-            .field("listen_mouse_out", &self.listen_mouse_out.is_some())
-            .finish()
+        f.debug_struct("UseSessionStorage").field("items", &self.len()).finish()
     }
 }

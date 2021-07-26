@@ -1,11 +1,10 @@
 mod display;
+mod iter;
 
-use std::collections::BTreeMap;
-use wasm_bindgen::JsValue;
-use web_sys::{Storage, StorageEvent, Window};
 use super::*;
 
 /// effect handler
+#[allow(dead_code)]
 pub struct UseLocalStorage {
     data: Rc<RefCell<UseLocalStorageData>>,
     listen_storage: Option<EventListener>,
@@ -21,10 +20,7 @@ impl UseLocalStorage {
     pub(crate) fn new(cx: &ScopeState) -> Option<Self> {
         let window = window()?;
         let storage = window.local_storage().ok()??;
-        let data = Rc::new(RefCell::new(UseLocalStorageData {
-            storage: Some(storage),
-            last_event: None,
-        }));
+        let data = Rc::new(RefCell::new(UseLocalStorageData { storage: Some(storage), last_event: None }));
         let listen_storage = Self::on_storage(cx, &window, &data);
         Some(Self { data, listen_storage: Some(listen_storage) })
     }
@@ -41,44 +37,59 @@ impl UseLocalStorage {
         let regenerate = cx.schedule_update();
         EventListener::new(window, "storage", move |e| {
             let e: StorageEvent = e.clone().unchecked_into();
-            if e.storage_area() {
-                let mut setter = setter.borrow_mut();
-                setter.last_event = Some(e);
-                regenerate()
+            let mut setter = setter.borrow_mut();
+            if !storage_eq(&setter.storage, &e.storage_area()) {
+                return
             }
+            setter.last_event = Some(e);
+            regenerate()
         })
     }
 }
 
 
+
 impl UseLocalStorage {
     /// Getter for the screenX field of this object.
+    #[inline]
     pub fn get(&self, key: &str) -> Option<String> {
-        self.data.borrow().storage.get_item(key).ok()?
+        self.data.borrow().storage.as_ref()?.get_item(key).ok()?
     }
     ///
+    #[inline]
     pub fn get_index(&self, index: usize) -> Option<String> {
-        self.data.borrow().storage.key(index as _).ok()?
+        self.data.borrow().storage.as_ref()?.key(index as _).ok()?
     }
     /// Getter for the screenX field of this object.
+    #[inline]
     pub fn insert(&self, key: &str, value: &str) -> bool {
-        self.data.borrow().storage.set_item(key, value).is_ok()
+        match &self.data.borrow().storage {
+            None => false,
+            Some(s) => s.set_item(key, value).is_ok(),
+        }
     }
     ///
+    #[inline]
     pub fn remove(&self, key: &str) -> bool {
-        self.data.borrow().storage.remove_item(key).is_ok()
+        match &self.data.borrow().storage {
+            None => false,
+            Some(s) => s.remove_item(key).is_ok(),
+        }
     }
     ///
-    pub fn clear(&self) -> bool {
-        self.data.borrow().storage.clear().is_ok()
+    #[inline]
+    pub fn len(&self) -> usize {
+        match &self.data.borrow().storage {
+            None => 0,
+            Some(s) => s.length().unwrap_or(0) as _,
+        }
     }
-    pub fn iter(&self) -> StorageIter {
-        StorageIter {
-            inner: &self.data.borrow().storage,
-            index: 0,
-            value: self.get_index(0).unwrap_or_default(),
+    ///
+    #[inline]
+    pub fn clear(&self) -> bool {
+        match &self.data.borrow().storage {
+            None => false,
+            Some(s) => s.clear().is_ok(),
         }
     }
 }
-
-

@@ -44,7 +44,7 @@ use web_sys::{window, Window};
 /// }
 /// ```
 #[inline]
-pub fn use_window_size(cx: &ScopeState) -> &mut UseWindowSize {
+pub fn use_window_size(cx: &ScopeState) -> &UseWindowSize {
     UseWindowBuilder::default().use_size(cx)
 }
 
