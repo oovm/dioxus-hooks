@@ -2,18 +2,12 @@ mod display;
 mod iter;
 
 use super::*;
-use log::warn;
 
 /// effect handler
 #[allow(dead_code)]
 pub struct UseLocalStorage {
-    data: Rc<RefCell<UseLocalStorageData>>,
+    data: Rc<RefCell<UseStorageData>>,
     listen_storage: Option<EventListener>,
-}
-
-struct UseLocalStorageData {
-    storage: Option<Storage>,
-    last_event: Option<StorageEvent>,
 }
 
 impl UseLocalStorage {
@@ -21,7 +15,7 @@ impl UseLocalStorage {
     pub(crate) fn new(cx: &ScopeState) -> Option<Self> {
         let window = window()?;
         let storage = window.local_storage().ok()??;
-        let data = Rc::new(RefCell::new(UseLocalStorageData { storage: Some(storage), last_event: None }));
+        let data = Rc::new(RefCell::new(UseStorageData { storage: Some(storage), last_event: None }));
         let listen_storage = Self::on_storage(cx, &window, &data);
         Some(Self { data, listen_storage: Some(listen_storage) })
     }
@@ -33,7 +27,7 @@ impl UseLocalStorage {
         }
         Self::default()
     }
-    fn on_storage(cx: &ScopeState, window: &Window, data: &Rc<RefCell<UseLocalStorageData>>) -> EventListener {
+    fn on_storage(cx: &ScopeState, window: &Window, data: &Rc<RefCell<UseStorageData>>) -> EventListener {
         #[cfg(debug_assertions)]
         {
             info!("Window Storage Listener Initialized at {}!", cx.scope_id().0);

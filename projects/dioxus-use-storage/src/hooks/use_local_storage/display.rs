@@ -6,12 +6,6 @@ impl Default for UseLocalStorage {
     }
 }
 
-impl Default for UseLocalStorageData {
-    fn default() -> Self {
-        Self { storage: None, last_event: None }
-    }
-}
-
 impl Debug for UseLocalStorage {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         f.write_str("UseLocalStorage ")?;

@@ -9,7 +9,7 @@ pub use self::{builder::UseStorageBuilder, use_local_storage::UseLocalStorage};
 use crate::hooks::use_session_storage::UseSessionStorage;
 use dioxus::core::ScopeState;
 use gloo_events::EventListener;
-use log::info;
+use log::{info, warn};
 use std::{
     cell::RefCell,
     fmt::{Debug, Display, Formatter},
@@ -17,7 +17,6 @@ use std::{
     rc::Rc,
 };
 use storage_iter::storage_eq;
-pub use storage_iter::*;
 use wasm_bindgen::JsCast;
 use web_sys::{window, Storage, StorageEvent, Window};
 
@@ -69,4 +68,20 @@ pub fn use_local_storage(cx: &ScopeState) -> &UseLocalStorage {
 #[inline]
 pub fn use_session_storage(cx: &ScopeState) -> &UseSessionStorage {
     UseStorageBuilder::default().use_session_storage(cx)
+}
+
+#[allow(dead_code)]
+struct UseStorageData {
+    storage: Option<Storage>,
+    last_event: Option<StorageEvent>,
+}
+
+///
+#[derive(Debug)]
+pub struct StorageIter<'a> {
+    inner: Option<Storage>,
+    count: u32,
+    index: u32,
+    bound: PhantomData<&'a ()>,
+    // pub(crate) value: String,
 }

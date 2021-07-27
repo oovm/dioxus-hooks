@@ -1,6 +1,6 @@
 [package]
 name = "dioxus-hooks-plus"
-version = "0.1.2"
+version = "0.2.0"
 authors = ["Aster <192607617@qq.com>"]
 description = "Additional hooks for dioxus"
 repository = "https://github.com/oovm/dioxus-hooks"
@@ -13,7 +13,7 @@ edition = "2021"
 dioxus-use-window = {version ="0.6.*", path = "../dioxus-use-window"}
 dioxus-use-clipboard = {version ="0.1.*", path = "../dioxus-use-clipboard", optional = true}
 dioxus-use-cursor = {version ="0.2.*", path = "../dioxus-use-cursor"}
-dioxus-use-storage = {version ="0.1.*", path = "../dioxus-use-storage"}
+dioxus-use-storage = {version ="0.2.*", path = "../dioxus-use-storage"}
 
 [dev-dependencies]
 

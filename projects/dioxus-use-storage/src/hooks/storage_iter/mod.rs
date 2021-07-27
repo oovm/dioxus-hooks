@@ -1,13 +1,9 @@
 use super::*;
 
-///
-#[derive(Debug)]
-pub struct StorageIter<'a> {
-    pub(crate) inner: Option<Storage>,
-    pub(crate) count: u32,
-    pub(crate) index: u32,
-    pub(crate) bound: PhantomData<&'a ()>,
-    // pub(crate) value: String,
+impl Default for UseStorageData {
+    fn default() -> Self {
+        Self { storage: None, last_event: None }
+    }
 }
 
 impl<'a> Iterator for StorageIter<'a> {

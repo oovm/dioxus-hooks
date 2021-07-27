@@ -59,7 +59,7 @@ impl UseStorageBuilder {
     /// }
     /// ```
     pub fn use_session_storage<'a>(&self, cx: &'a ScopeState) -> &'a mut UseSessionStorage {
-        let hook = UseSessionStorage::new(cx).unwrap_or(UseSessionStorage::new_ssr(cx));
+        let hook = UseSessionStorage::new(cx).unwrap_or_else(|| UseSessionStorage::new_ssr(cx));
         cx.use_hook(|_| hook)
     }
 }

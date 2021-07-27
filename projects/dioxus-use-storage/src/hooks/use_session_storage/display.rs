@@ -6,12 +6,6 @@ impl Default for UseSessionStorage {
     }
 }
 
-impl Default for UseLocalSessionData {
-    fn default() -> Self {
-        Self { storage: None, last_event: None }
-    }
-}
-
 impl Debug for UseSessionStorage {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         f.write_str("UseSessionStorage ")?;
