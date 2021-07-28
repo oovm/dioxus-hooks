@@ -18,7 +18,7 @@ impl Default for UseWindowSize {
 impl Debug for UseWindowSize {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("WindowSize")
-            .field("width", &self.get_width())
+            .field("width", &self.get_inner_width())
             .field("height", &self.get_height())
             .field("aspect_radio", &self.aspect_radio())
             .field("listen_window", &self.listen_window.is_some())
@@ -28,7 +28,7 @@ impl Debug for UseWindowSize {
 
 impl Display for UseWindowSize {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        f.debug_tuple("").field(&self.get_width()).field(&self.get_height()).finish()
+        f.debug_tuple("").field(&self.get_inner_width()).field(&self.get_height()).finish()
     }
 }
 

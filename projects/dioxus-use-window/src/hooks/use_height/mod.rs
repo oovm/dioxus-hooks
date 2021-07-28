@@ -7,8 +7,35 @@ pub struct UseWindowHeight {
     inner: UseWindowSize,
 }
 
+impl UseWindowBuilder {
+    /// hooks for window's height with config
+    ///
+    /// # Arguments
+    ///
+    /// returns: [`UseWindowHeight`]
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use dioxus::prelude::*;
+    /// use dioxus_use_window::{UseWindowBuilder};
+    ///
+    /// fn App(cx: Scope) -> Element {
+    ///     let hook = UseWindowBuilder::default().use_height(&cx);
+    ///
+    ///     cx.render(rsx!(
+    ///         h1 { "Window height: {hook}" }
+    ///     ))
+    /// }
+    /// ```
+    pub fn use_height<'a>(&self, cx: &'a ScopeState) -> &'a mut UseWindowHeight {
+        let hook = UseWindowHeight::new(self.hook_window_size(cx));
+        cx.use_hook(|_| hook)
+    }
+}
+
 impl UseWindowHeight {
-    pub(crate) fn new(size: UseWindowSize) -> Self {
+    fn new(size: UseWindowSize) -> Self {
         Self { inner: size }
     }
 }
@@ -22,6 +49,6 @@ impl UseWindowHeight {
     /// set height of current window, return `false` if failed to run
     #[inline]
     pub fn set(&self, height: usize) -> bool {
-        UseWindowSize::set_window_height(height).is_some()
+        self.inner.set_height(height)
     }
 }

@@ -65,30 +65,7 @@ impl UseWindowBuilder {
         let hook = UseWindowWidth::new(self.hook_window_size(cx));
         cx.use_hook(|_| hook)
     }
-    /// hooks for window's height with config
-    ///
-    /// # Arguments
-    ///
-    /// returns: [`UseWindowHeight`]
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use dioxus::prelude::*;
-    /// use dioxus_use_window::{UseWindowBuilder};
-    ///
-    /// fn App(cx: Scope) -> Element {
-    ///     let hook = UseWindowBuilder::default().use_height(&cx);
-    ///
-    ///     cx.render(rsx!(
-    ///         h1 { "Window height: {hook}" }
-    ///     ))
-    /// }
-    /// ```
-    pub fn use_height<'a>(&self, cx: &'a ScopeState) -> &'a mut UseWindowHeight {
-        let hook = UseWindowHeight::new(self.hook_window_size(cx));
-        cx.use_hook(|_| hook)
-    }
+
     /// hooks for window's layout with config
     ///
     /// # Arguments
@@ -143,7 +120,7 @@ impl UseWindowBuilder {
 }
 
 impl UseWindowBuilder {
-    fn hook_window_size(&self, cx: &ScopeState) -> UseWindowSize {
+    pub(crate) fn hook_window_size(&self, cx: &ScopeState) -> UseWindowSize {
         match UseWindowSize::new(cx) {
             None => {
                 let data = WindowSizeData::from(self.clone());

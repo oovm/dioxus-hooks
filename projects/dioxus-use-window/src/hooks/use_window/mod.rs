@@ -1,6 +1,6 @@
 use super::*;
-use log::warn;
 
+pub mod data;
 mod display;
 
 /// Window size effect handler
@@ -9,15 +9,10 @@ pub struct UseWindowSize {
     listen_window: Option<EventListener>,
 }
 
-pub(crate) struct WindowSizeData {
-    x: f64,
-    y: f64,
-}
-
 impl UseWindowSize {
     pub(crate) fn new(cx: &ScopeState) -> Option<Self> {
         let window = window()?;
-        let size = Self::get_size()?;
+        let size = get_size()?;
         let data = Rc::new(RefCell::new(WindowSizeData { x: size.0, y: size.1 }));
         let listener = Self::on_window_resize(cx, &window, &data);
         Some(Self { data, listen_window: Some(listener) })
@@ -39,7 +34,7 @@ impl UseWindowSize {
         let setter = data.clone();
         EventListener::new(window, "resize", move |_| {
             let mut setter = setter.borrow_mut();
-            if let Some(size) = Self::get_size() {
+            if let Some(size) = get_size() {
                 setter.x = size.0;
                 setter.y = size.1;
                 regenerate();
@@ -49,37 +44,15 @@ impl UseWindowSize {
 }
 
 impl UseWindowSize {
-    /// get size of the current window, return `None` if window not found
-    fn get_size() -> Option<(f64, f64)> {
-        let window = window()?;
-        let x = window.inner_width().ok()?.as_f64()?;
-        let y = window.inner_height().ok()?.as_f64()?;
-        Some((x, y))
-    }
-    /// set width of the current window, return `None` if failed to run
-    #[inline]
-    fn set_window_width(input: usize) -> Option<()> {
-        window()?.set_inner_width(&JsValue::from(input)).ok()
-    }
-    /// set height of the current window, return `None` if failed to run
-    fn set_window_height(input: usize) -> Option<()> {
-        window()?.set_inner_width(&JsValue::from(input)).ok()
-    }
-    fn set_window_size_delta(x: isize, y: isize) -> Option<()> {
-        window()?.resize_by(x as _, y as _).ok()
-    }
-}
-
-impl UseWindowSize {
     /// get width of current window
     #[inline]
-    pub fn get_width(&self) -> usize {
+    pub fn get_inner_width(&self) -> usize {
         self.data.borrow().x as _
     }
     /// get width of current window
     #[inline]
-    pub fn set_width(&self, new: usize) -> bool {
-        Self::set_window_width(new).is_some()
+    pub fn set_inner_width(&self, width: usize) -> bool {
+        set_window_width(width).is_some()
     }
     /// get height of current window
     #[inline]
@@ -88,8 +61,8 @@ impl UseWindowSize {
     }
     /// set height of current window
     #[inline]
-    pub fn set_height(&self) -> usize {
-        self.data.borrow().y as _
+    pub fn set_height(&self, height: usize) -> bool {
+        set_window_height(height).is_some()
     }
     /// get size of current window
     #[inline]
@@ -108,7 +81,7 @@ impl UseWindowSize {
     where
         T: From<usize>,
     {
-        self.get_width().into()
+        self.get_inner_width().into()
     }
     /// get aspect radio of current window
     #[inline]
@@ -131,4 +104,25 @@ impl UseWindowSize {
     pub fn as_layout<T>(self) -> UseWindowLayout<T> {
         UseWindowLayout::new(self)
     }
+}
+
+#[inline]
+fn get_size() -> Option<(f64, f64)> {
+    let window = window()?;
+    let x = window.inner_width().ok()?.as_f64()?;
+    let y = window.inner_height().ok()?.as_f64()?;
+    Some((x, y))
+}
+
+#[inline]
+fn set_window_width(input: usize) -> Option<()> {
+    window()?.set_inner_width(&JsValue::from(input)).ok()
+}
+#[inline]
+fn set_window_height(input: usize) -> Option<()> {
+    window()?.set_inner_width(&JsValue::from(input)).ok()
+}
+#[inline]
+fn set_window_size_delta(x: isize, y: isize) -> Option<()> {
+    window()?.resize_by(x as _, y as _).ok()
 }
