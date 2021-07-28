@@ -10,6 +10,7 @@ pub struct UseWindowLayout<T> {
 }
 
 impl<T> UseWindowLayout<T> {
+    #[inline]
     pub(crate) fn new(size: UseWindowSize) -> Self {
         Self { inner: size, bound: Default::default() }
     }
@@ -20,8 +21,8 @@ where
     T: From<usize>,
 {
     /// get layout of current window
+    #[inline]
     pub fn get(&self) -> T {
         self.inner.layout()
-        // T::from(self.inner.x as usize)
     }
 }

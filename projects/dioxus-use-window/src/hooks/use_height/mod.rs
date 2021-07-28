@@ -17,7 +17,7 @@ impl UseWindowHeight {
     /// get height of current window
     #[inline]
     pub fn get(&self) -> usize {
-        self.inner.height()
+        self.inner.get_height()
     }
     /// set height of current window, return `false` if failed to run
     #[inline]

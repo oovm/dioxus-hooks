@@ -6,6 +6,16 @@ pub struct UseStorageData {
     // last_event: Option<StorageEvent>,
 }
 
+///
+#[derive(Debug)]
+pub struct StorageIter<'a> {
+    inner: Option<Storage>,
+    count: u32,
+    index: u32,
+    bound: PhantomData<&'a ()>,
+    // pub(crate) value: String,
+}
+
 impl<'a> Iterator for StorageIter<'a> {
     type Item = (String, String);
 
@@ -33,6 +43,19 @@ impl<'a> Iterator for StorageIter<'a> {
     }
 }
 
+impl<'a> StorageIter<'a> {
+    /// c
+    #[inline]
+    pub fn new(storage: Option<Storage>) -> Self {
+        let count = match &storage {
+            None => 0,
+            Some(s) => s.length().unwrap_or_default(),
+        };
+        Self { inner: storage, count, index: 0, bound: Default::default() }
+    }
+}
+
+#[inline]
 pub(crate) fn storage_eq(owned: &Option<Storage>, event: &Option<Storage>) -> bool {
     match (owned, event) {
         (Some(lhs), Some(rhs)) => lhs.eq(&rhs),

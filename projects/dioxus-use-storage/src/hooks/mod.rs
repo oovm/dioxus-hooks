@@ -6,7 +6,7 @@ mod use_local_storage;
 mod use_session_storage;
 
 use self::storage_iter::{on_storage, UseStorageData};
-pub use self::{builder::UseStorageBuilder, use_local_storage::UseLocalStorage};
+pub use self::{builder::UseStorageBuilder, storage_iter::StorageIter, use_local_storage::UseLocalStorage};
 use crate::hooks::use_session_storage::UseSessionStorage;
 use dioxus::core::ScopeState;
 use gloo_events::EventListener;
@@ -68,14 +68,4 @@ pub fn use_local_storage(cx: &ScopeState) -> &UseLocalStorage {
 #[inline]
 pub fn use_session_storage(cx: &ScopeState) -> &UseSessionStorage {
     UseStorageBuilder::default().use_session_storage(cx)
-}
-
-///
-#[derive(Debug)]
-pub struct StorageIter<'a> {
-    inner: Option<Storage>,
-    count: u32,
-    index: u32,
-    bound: PhantomData<&'a ()>,
-    // pub(crate) value: String,
 }

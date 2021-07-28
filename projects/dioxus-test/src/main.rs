@@ -1,5 +1,7 @@
 #![allow(non_snake_case)]
 
+mod test_storage;
+pub use self::test_storage::TestStorage;
 use dioxus::prelude::*;
 use dioxus_hooks_plus::{use_local_storage, use_responsive_layout, use_session_storage, use_window_size};
 
@@ -14,22 +16,6 @@ fn App(cx: Scope) -> Element {
         div {
             TestWindow {}
             TestStorage {}
-        }
-    ))
-}
-
-fn TestStorage(cx: Scope) -> Element {
-    let local = use_local_storage(&cx);
-    let session = use_session_storage(&cx);
-
-    cx.render(rsx!(
-        div {
-            style : "white-space:pre",
-            "Local storage: {local:#?}"
-        }
-        div {
-            style : "white-space:pre",
-            "Session storage: {session:#?}"
         }
     ))
 }

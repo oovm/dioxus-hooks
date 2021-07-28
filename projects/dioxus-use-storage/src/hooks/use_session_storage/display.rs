@@ -15,6 +15,9 @@ impl Debug for UseSessionStorage {
 
 impl Display for UseSessionStorage {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("UseSessionStorage").field("items", &self.len()).finish()
+        f.debug_struct("UseSessionStorage")
+            .field("items", &self.len())
+            .field("listen_storage", &self.listen_storage.is_some())
+            .finish()
     }
 }

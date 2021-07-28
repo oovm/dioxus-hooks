@@ -17,11 +17,12 @@ impl UseWindowWidth {
     /// get width of current window
     #[inline]
     pub fn get(&self) -> usize {
-        self.inner.width()
+        self.inner.get_width()
     }
     /// set width of current window, return `false` if failed to run
+    #[inline]
     pub fn set(&self, width: usize) -> bool {
-        UseWindowSize::set_window_width(width).is_some()
+        self.inner.set_width(width)
     }
     /// get layout of current window, return `false` if failed to run
     #[inline]

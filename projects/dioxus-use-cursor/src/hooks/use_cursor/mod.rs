@@ -14,7 +14,6 @@ struct UseCursorData {
 }
 
 impl UseCursor {
-    /// builder of `UseCursor`
     pub(crate) fn new(cx: &ScopeState) -> Option<Self> {
         let window = window()?;
         let data = Rc::new(RefCell::new(UseCursorData::default()));

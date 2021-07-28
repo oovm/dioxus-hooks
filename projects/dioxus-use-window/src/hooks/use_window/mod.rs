@@ -50,40 +50,65 @@ impl UseWindowSize {
 
 impl UseWindowSize {
     /// get size of the current window, return `None` if window not found
-    pub fn get_size() -> Option<(f64, f64)> {
+    fn get_size() -> Option<(f64, f64)> {
         let window = window()?;
         let x = window.inner_width().ok()?.as_f64()?;
         let y = window.inner_height().ok()?.as_f64()?;
         Some((x, y))
     }
     /// set width of the current window, return `None` if failed to run
-    pub fn set_window_width(input: usize) -> Option<()> {
+    #[inline]
+    fn set_window_width(input: usize) -> Option<()> {
         window()?.set_inner_width(&JsValue::from(input)).ok()
     }
     /// set height of the current window, return `None` if failed to run
-    pub fn set_window_height(input: usize) -> Option<()> {
+    fn set_window_height(input: usize) -> Option<()> {
         window()?.set_inner_width(&JsValue::from(input)).ok()
+    }
+    fn set_window_size_delta(x: isize, y: isize) -> Option<()> {
+        window()?.resize_by(x as _, y as _).ok()
     }
 }
 
 impl UseWindowSize {
     /// get width of current window
     #[inline]
-    pub fn width(&self) -> usize {
+    pub fn get_width(&self) -> usize {
         self.data.borrow().x as _
+    }
+    /// get width of current window
+    #[inline]
+    pub fn set_width(&self, new: usize) -> bool {
+        Self::set_window_width(new).is_some()
     }
     /// get height of current window
     #[inline]
-    pub fn height(&self) -> usize {
+    pub fn get_height(&self) -> usize {
         self.data.borrow().y as _
     }
+    /// set height of current window
+    #[inline]
+    pub fn set_height(&self) -> usize {
+        self.data.borrow().y as _
+    }
+    /// get size of current window
+    #[inline]
+    pub fn get_size(&self) -> usize {
+        self.data.borrow().y as _
+    }
+    /// set size of current window
+    #[inline]
+    pub fn set_size(&self) -> usize {
+        self.data.borrow().y as _
+    }
+
     /// get layout of current window
     #[inline]
     pub fn layout<T>(&self) -> T
     where
         T: From<usize>,
     {
-        self.width().into()
+        self.get_width().into()
     }
     /// get aspect radio of current window
     #[inline]
