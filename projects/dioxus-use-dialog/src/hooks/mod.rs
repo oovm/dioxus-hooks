@@ -3,6 +3,7 @@ mod use_dialog;
 
 use crate::hooks::use_dialog::UseDialog;
 use dioxus::core::ScopeState;
+use log::info;
 use std::fmt::{Debug, Formatter};
 use web_sys::{window, Window};
 
@@ -16,10 +17,10 @@ use web_sys::{window, Window};
 ///
 /// ```
 /// use dioxus::prelude::*;
-/// use dioxus_use_window::use_window_size;
+/// use dioxus_use_dialog::use_dialog;
 ///
 /// fn App(cx: Scope) -> Element {
-///     let size = use_window_size(&cx);
+///     let size = use_dialog(&cx);
 ///
 ///     cx.render(rsx!(
 ///         h1 { "Window size: {size}" }

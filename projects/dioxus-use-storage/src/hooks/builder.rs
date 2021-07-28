@@ -33,7 +33,7 @@ impl UseStorageBuilder {
     /// }
     /// ```
     pub fn use_local_storage<'a>(&self, cx: &'a ScopeState) -> &'a mut UseLocalStorage {
-        let hook = UseLocalStorage::new(cx).unwrap_or_else(|| UseLocalStorage::new_ssr(cx));
+        let hook = UseLocalStorage::new(cx);
         cx.use_hook(|_| hook)
     }
     /// hooks for window's size with config
@@ -59,7 +59,7 @@ impl UseStorageBuilder {
     /// }
     /// ```
     pub fn use_session_storage<'a>(&self, cx: &'a ScopeState) -> &'a mut UseSessionStorage {
-        let hook = UseSessionStorage::new(cx).unwrap_or_else(|| UseSessionStorage::new_ssr(cx));
+        let hook = UseSessionStorage::new(cx);
         cx.use_hook(|_| hook)
     }
 }

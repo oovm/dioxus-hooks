@@ -5,6 +5,7 @@ mod storage_iter;
 mod use_local_storage;
 mod use_session_storage;
 
+use self::storage_iter::{on_storage, UseStorageData};
 pub use self::{builder::UseStorageBuilder, use_local_storage::UseLocalStorage};
 use crate::hooks::use_session_storage::UseSessionStorage;
 use dioxus::core::ScopeState;
@@ -16,7 +17,6 @@ use std::{
     marker::PhantomData,
     rc::Rc,
 };
-use storage_iter::storage_eq;
 use wasm_bindgen::JsCast;
 use web_sys::{window, Storage, StorageEvent, Window};
 
@@ -36,7 +36,7 @@ use web_sys::{window, Storage, StorageEvent, Window};
 ///     let hook = use_local_storage(&cx);
 ///
 ///     cx.render(rsx!(
-///         h1 { "Local Storage: {hook}" }
+///         h1 { "Local Storage: {hook:#?}" }
 ///     ))
 /// }
 /// ```
@@ -68,12 +68,6 @@ pub fn use_local_storage(cx: &ScopeState) -> &UseLocalStorage {
 #[inline]
 pub fn use_session_storage(cx: &ScopeState) -> &UseSessionStorage {
     UseStorageBuilder::default().use_session_storage(cx)
-}
-
-#[allow(dead_code)]
-struct UseStorageData {
-    storage: Option<Storage>,
-    last_event: Option<StorageEvent>,
 }
 
 ///

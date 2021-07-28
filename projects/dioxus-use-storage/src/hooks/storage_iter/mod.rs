@@ -1,9 +1,9 @@
+mod storage_data;
 use super::*;
 
-impl Default for UseStorageData {
-    fn default() -> Self {
-        Self { storage: None, last_event: None }
-    }
+pub struct UseStorageData {
+    storage: Option<Storage>,
+    // last_event: Option<StorageEvent>,
 }
 
 impl<'a> Iterator for StorageIter<'a> {
@@ -38,4 +38,22 @@ pub(crate) fn storage_eq(owned: &Option<Storage>, event: &Option<Storage>) -> bo
         (Some(lhs), Some(rhs)) => lhs.eq(&rhs),
         _ => false,
     }
+}
+
+pub(crate) fn on_storage(cx: &ScopeState, window: &Window, data: &Rc<RefCell<UseStorageData>>) -> EventListener {
+    #[cfg(debug_assertions)]
+    {
+        info!("Window Storage Listener Initialized at {}!", cx.scope_id().0);
+    }
+    let setter = data.clone();
+    let regenerate = cx.schedule_update();
+    EventListener::new(window, "storage", move |e| {
+        let e: StorageEvent = e.clone().unchecked_into();
+        let setter = setter.borrow_mut();
+        if !storage_eq(&setter.storage, &e.storage_area()) {
+            return;
+        }
+        // setter.last_event = Some(e);
+        regenerate()
+    })
 }

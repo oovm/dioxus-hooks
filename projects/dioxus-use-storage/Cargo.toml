@@ -1,6 +1,6 @@
 [package]
 name = "dioxus-use-storage"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["Aster <192607617@qq.com>"]
 description = "`use_storage` hooks for dioxus"
 repository = "https://github.com/oovm/dioxus-hooks"

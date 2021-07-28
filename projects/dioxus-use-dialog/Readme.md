@@ -1,4 +1,4 @@
-## useWindow
+## useDialog
 
 A really common need is to get the current size of the browser window.
 

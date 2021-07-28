@@ -1,4 +1,5 @@
 mod display;
+
 use super::*;
 
 pub struct UseDialog {
@@ -7,7 +8,11 @@ pub struct UseDialog {
 
 impl UseDialog {
     pub(crate) fn new(_: &ScopeState) -> Self {
-        Self { window: window() }
+        let out = Self { window: window() };
+        if out.window.is_none() {
+            info!("`window` not found, `UseDialog` works as ssr mode.");
+        }
+        out
     }
 
     /// Calls the alert function.
