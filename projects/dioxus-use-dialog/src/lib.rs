@@ -6,7 +6,5 @@
 #![doc(html_favicon_url = "https://example.com/favicon.ico")]
 
 mod hooks;
-mod layouts;
 
 pub use hooks::*;
-pub use layouts::*;
