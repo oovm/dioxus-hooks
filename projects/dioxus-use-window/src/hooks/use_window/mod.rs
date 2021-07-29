@@ -13,7 +13,7 @@ impl UseWindowSize {
     pub(crate) fn new(cx: &ScopeState) -> Option<Self> {
         let window = window()?;
         let size = get_size()?;
-        let data = Rc::new(RefCell::new(WindowSizeData { x: size.0, y: size.1 }));
+        let data = WindowSizeData::new();
         let listener = Self::on_window_resize(cx, &window, &data);
         Some(Self { data, listen_window: Some(listener) })
     }
