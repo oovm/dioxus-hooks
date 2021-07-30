@@ -4,91 +4,156 @@ pub mod data;
 mod display;
 
 /// Window size effect handler
-pub struct UseWindowSize {
+pub struct UseWindow {
     data: Rc<RefCell<WindowSizeData>>,
     listen_window: Option<EventListener>,
 }
 
-impl UseWindowSize {
-    pub(crate) fn new(cx: &ScopeState) -> Option<Self> {
+impl UseWindowBuilder {
+    /// hooks for window's size with config
+    ///
+    /// # Arguments
+    ///
+    /// returns: [`UseWindowSize`]
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use dioxus::prelude::*;
+    /// use dioxus_use_window::{UseWindowBuilder};
+    ///
+    /// fn App(cx: Scope) -> Element {
+    ///     let hook = UseWindowBuilder::default().use_window(&cx);
+    ///
+    ///     cx.render(rsx!(
+    ///         h1 { "Window size: {hook}" }
+    ///     ))
+    /// }
+    /// ```
+    pub fn use_window<'a>(&self, cx: &'a ScopeState) -> &'a mut UseWindow {
+        let hook = self.use_window_hook(cx);
+        cx.use_hook(|_| hook)
+    }
+    #[inline]
+    pub(crate) fn use_window_hook(&self, cx: &ScopeState) -> UseWindow {
+        UseWindow::new(cx, self).unwrap_or_else(|| UseWindow::new_ssr(cx, self))
+    }
+}
+
+impl UseWindow {
+    fn new(cx: &ScopeState, config: &UseWindowBuilder) -> Option<Self> {
+        let data = WindowSizeData::new(window(), (config.missing_x as _, config.missing_y as _));
         let window = window()?;
-        let size = get_size()?;
-        let data = WindowSizeData::new();
         let listener = Self::on_window_resize(cx, &window, &data);
         Some(Self { data, listen_window: Some(listener) })
     }
-    pub(crate) fn new_ssr(cx: &ScopeState, data: WindowSizeData) -> Self {
-        #[cfg(debug_assertions)]
-        {
-            warn!("Window Resize Listener Initializing failed at {}!", cx.scope_id().0);
-        }
-        let data = Rc::new(RefCell::new(data));
+    fn new_ssr(cx: &ScopeState, config: &UseWindowBuilder) -> Self {
+        warn!("Window Resize Listener Initializing failed at {}!", cx.scope_id().0);
+        let data = WindowSizeData::new(None, (config.missing_x as _, config.missing_y as _));
         Self { data, listen_window: None }
     }
+    #[allow(unused_variables)]
     fn on_window_resize(cx: &ScopeState, window: &Window, data: &Rc<RefCell<WindowSizeData>>) -> EventListener {
         #[cfg(debug_assertions)]
         {
             info!("Windows Resize Listener Initialized at {}!", cx.scope_id().0);
         }
         let regenerate = cx.schedule_update();
-        let setter = data.clone();
+        // let setter = data.clone();
         EventListener::new(window, "resize", move |_| {
-            let mut setter = setter.borrow_mut();
-            if let Some(size) = get_size() {
-                setter.x = size.0;
-                setter.y = size.1;
-                regenerate();
-            }
+            // let mut setter = setter.borrow_mut();
+            // if let Some(size) = get_size() {
+            // setter.x = size.0;
+            // setter.y = size.1;
+            // regenerate();
+            // }
+            regenerate();
         })
     }
 }
 
-impl UseWindowSize {
+impl UseWindow {
     /// get width of current window
     #[inline]
-    pub fn get_inner_width(&self) -> usize {
-        self.data.borrow().x as _
-    }
-    /// get width of current window
-    #[inline]
-    pub fn set_inner_width(&self, width: usize) -> bool {
-        set_window_width(width).is_some()
+    pub(crate) fn data(&self) -> Ref<WindowSizeData> {
+        self.data.borrow()
     }
     /// get height of current window
+    ///
+    /// **read-only**
     #[inline]
-    pub fn get_height(&self) -> usize {
-        self.data.borrow().y as _
+    pub fn size(&self) -> (usize, usize) {
+        (self.width(), self.height())
     }
-    /// set height of current window
+    /// get height of current window
+    ///
+    /// **read-only**
     #[inline]
-    pub fn set_height(&self, height: usize) -> bool {
-        set_window_height(height).is_some()
+    pub fn width(&self) -> usize {
+        self.data.borrow().inner_width() as usize
     }
-    /// get size of current window
+    /// get height of current window
+    ///
+    /// **read-only**
     #[inline]
-    pub fn get_size(&self) -> usize {
-        self.data.borrow().y as _
+    pub fn height(&self) -> usize {
+        self.data.borrow().inner_height() as usize
     }
-    /// set size of current window
+    /// get aspect radio of current window
     #[inline]
-    pub fn set_size(&self) -> usize {
-        self.data.borrow().y as _
+    pub fn aspect_radio(&self) -> f64 {
+        self.data.borrow().inner_aspect_radio()
     }
-
     /// get layout of current window
     #[inline]
     pub fn layout<T>(&self) -> T
     where
         T: From<usize>,
     {
-        self.get_inner_width().into()
+        let w = self.data.borrow().inner_width() as usize;
+        T::from(w)
+    }
+}
+
+impl UseWindow {
+    /// get size of current browser
+    #[inline]
+    pub fn browser_size(&self) -> (usize, usize) {
+        (self.width(), self.height())
+    }
+    /// get width of current browser
+    ///
+    /// **read-only**
+    #[inline]
+    pub fn browser_width(&self) -> usize {
+        self.data.borrow().outer_width() as usize
+    }
+    /// get height of current window
+    ///
+    /// **read-only**
+    #[inline]
+    pub fn browser_height(&self) -> usize {
+        self.data.borrow().outer_height() as usize
     }
     /// get aspect radio of current window
     #[inline]
-    pub fn aspect_radio(&self) -> f64 {
-        let data = self.data.borrow();
-        data.x / data.y
+    pub fn browser_aspect_radio(&self) -> f64 {
+        self.data.borrow().outer_aspect_radio()
     }
+    /// get height of current window
+    #[inline]
+    pub fn browser_size_set(&self, size: (usize, usize)) -> bool {
+        self.data.borrow().resize_outer_size(size.0 as _, size.1 as _).is_some()
+    }
+    /// get height of current window
+    #[inline]
+    pub fn browser_size_delta(&self, size: (i32, i32)) -> bool {
+        self.data.borrow().resize_outer_delta(size.0, size.1).is_some()
+    }
+}
+
+// noinspection RsSelfConvention
+impl UseWindow {
     /// using as [`WindowWidth`]
     #[inline]
     pub fn as_width(self) -> UseWindowWidth {
@@ -104,25 +169,4 @@ impl UseWindowSize {
     pub fn as_layout<T>(self) -> UseWindowLayout<T> {
         UseWindowLayout::new(self)
     }
-}
-
-#[inline]
-fn get_size() -> Option<(f64, f64)> {
-    let window = window()?;
-    let x = window.inner_width().ok()?.as_f64()?;
-    let y = window.inner_height().ok()?.as_f64()?;
-    Some((x, y))
-}
-
-#[inline]
-fn set_window_width(input: usize) -> Option<()> {
-    window()?.set_inner_width(&JsValue::from(input)).ok()
-}
-#[inline]
-fn set_window_height(input: usize) -> Option<()> {
-    window()?.set_inner_width(&JsValue::from(input)).ok()
-}
-#[inline]
-fn set_window_size_delta(x: isize, y: isize) -> Option<()> {
-    window()?.resize_by(x as _, y as _).ok()
 }

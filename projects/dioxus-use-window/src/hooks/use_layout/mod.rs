@@ -5,13 +5,13 @@ use super::*;
 /// Window layout effect handler
 #[derive(Debug)]
 pub struct UseWindowLayout<T> {
-    inner: UseWindowSize,
+    inner: UseWindow,
     bound: PhantomData<T>,
 }
 
 impl<T> UseWindowLayout<T> {
     #[inline]
-    pub(crate) fn new(size: UseWindowSize) -> Self {
+    pub(crate) fn new(size: UseWindow) -> Self {
         Self { inner: size, bound: Default::default() }
     }
 }

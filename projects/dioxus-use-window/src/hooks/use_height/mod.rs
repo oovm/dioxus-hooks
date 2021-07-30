@@ -4,7 +4,7 @@ use super::*;
 /// Window height effect handler
 #[derive(Debug)]
 pub struct UseWindowHeight {
-    inner: UseWindowSize,
+    inner: UseWindow,
 }
 
 impl UseWindowBuilder {
@@ -28,14 +28,16 @@ impl UseWindowBuilder {
     ///     ))
     /// }
     /// ```
+    #[inline]
     pub fn use_height<'a>(&self, cx: &'a ScopeState) -> &'a mut UseWindowHeight {
-        let hook = UseWindowHeight::new(self.hook_window_size(cx));
+        let hook = UseWindowHeight::new(self.use_window_hook(cx));
         cx.use_hook(|_| hook)
     }
 }
 
 impl UseWindowHeight {
-    fn new(size: UseWindowSize) -> Self {
+    #[inline]
+    pub(crate) fn new(size: UseWindow) -> Self {
         Self { inner: size }
     }
 }
@@ -44,11 +46,11 @@ impl UseWindowHeight {
     /// get height of current window
     #[inline]
     pub fn get(&self) -> usize {
-        self.inner.get_height()
+        self.inner.data().inner_height() as _
     }
     /// set height of current window, return `false` if failed to run
     #[inline]
     pub fn set(&self, height: usize) -> bool {
-        self.inner.set_height(height)
+        self.inner.data().set_inner_height(height).is_some()
     }
 }

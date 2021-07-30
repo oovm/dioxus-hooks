@@ -10,8 +10,8 @@ where
     }
 }
 
-impl<T> From<UseWindowSize> for UseWindowLayout<T> {
-    fn from(size: UseWindowSize) -> Self {
+impl<T> From<UseWindow> for UseWindowLayout<T> {
+    fn from(size: UseWindow) -> Self {
         Self::new(size)
     }
 }

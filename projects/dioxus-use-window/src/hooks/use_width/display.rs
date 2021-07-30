@@ -5,8 +5,8 @@ impl Display for UseWindowWidth {
     }
 }
 
-impl From<UseWindowSize> for UseWindowWidth {
-    fn from(size: UseWindowSize) -> Self {
+impl From<UseWindow> for UseWindowWidth {
+    fn from(size: UseWindow) -> Self {
         Self::new(size)
     }
 }

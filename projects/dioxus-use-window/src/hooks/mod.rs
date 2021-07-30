@@ -5,17 +5,17 @@ mod use_layout;
 mod use_width;
 mod use_window;
 
-use self::use_window::{data::*, WindowSizeData};
+use self::use_window::data::*;
 pub use self::{
     builder::UseWindowBuilder, use_height::UseWindowHeight, use_layout::UseWindowLayout, use_width::UseWindowWidth,
-    use_window::UseWindowSize,
+    use_window::UseWindow,
 };
 use crate::ResponsiveLayout;
 use dioxus::core::ScopeState;
 use gloo_events::EventListener;
 use log::{info, warn};
 use std::{
-    cell::RefCell,
+    cell::{Ref, RefCell},
     fmt::{Debug, Display, Formatter},
     marker::PhantomData,
     rc::Rc,
@@ -44,8 +44,8 @@ use web_sys::{window, Window};
 /// }
 /// ```
 #[inline]
-pub fn use_window_size(cx: &ScopeState) -> &UseWindowSize {
-    UseWindowBuilder::default().use_size(cx)
+pub fn use_window_size(cx: &ScopeState) -> &UseWindow {
+    UseWindowBuilder::default().use_window(cx)
 }
 
 /// hooks for window's width

@@ -17,30 +17,6 @@ impl Default for UseWindowBuilder {
 }
 
 impl UseWindowBuilder {
-    /// hooks for window's size with config
-    ///
-    /// # Arguments
-    ///
-    /// returns: [`UseWindowSize`]
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use dioxus::prelude::*;
-    /// use dioxus_use_window::{UseWindowBuilder};
-    ///
-    /// fn App(cx: Scope) -> Element {
-    ///     let hook = UseWindowBuilder::default().use_size(&cx);
-    ///
-    ///     cx.render(rsx!(
-    ///         h1 { "Window size: {hook}" }
-    ///     ))
-    /// }
-    /// ```
-    pub fn use_size<'a>(&self, cx: &'a ScopeState) -> &'a mut UseWindowSize {
-        let hook = self.hook_window_size(cx);
-        cx.use_hook(|_| hook)
-    }
     /// hooks for window's width with config
     ///
     /// # Arguments
@@ -62,7 +38,7 @@ impl UseWindowBuilder {
     /// }
     /// ```
     pub fn use_width<'a>(&self, cx: &'a ScopeState) -> &'a mut UseWindowWidth {
-        let hook = UseWindowWidth::new(self.hook_window_size(cx));
+        let hook = UseWindowWidth::new(self.use_window_hook(cx));
         cx.use_hook(|_| hook)
     }
 
@@ -90,7 +66,7 @@ impl UseWindowBuilder {
     where
         T: 'static,
     {
-        let hook = UseWindowLayout::new(self.hook_window_size(cx));
+        let hook = UseWindowLayout::new(self.use_window_hook(cx));
         cx.use_hook(|_| hook)
     }
     /// hooks for window's responsive layout with config
@@ -116,17 +92,5 @@ impl UseWindowBuilder {
     #[inline]
     pub fn use_responsive_layout<'a>(&self, cx: &'a ScopeState) -> &'a mut UseWindowLayout<ResponsiveLayout> {
         self.use_layout(cx)
-    }
-}
-
-impl UseWindowBuilder {
-    pub(crate) fn hook_window_size(&self, cx: &ScopeState) -> UseWindowSize {
-        match UseWindowSize::new(cx) {
-            None => {
-                let data = WindowSizeData::from(self.clone());
-                UseWindowSize::new_ssr(cx, data)
-            }
-            Some(s) => s,
-        }
     }
 }

@@ -4,11 +4,11 @@ use super::*;
 /// Window width effect handler
 #[derive(Debug)]
 pub struct UseWindowWidth {
-    inner: UseWindowSize,
+    inner: UseWindow,
 }
 
 impl UseWindowWidth {
-    pub(crate) fn new(size: UseWindowSize) -> Self {
+    pub(crate) fn new(size: UseWindow) -> Self {
         Self { inner: size }
     }
 }
@@ -17,12 +17,12 @@ impl UseWindowWidth {
     /// get width of current window
     #[inline]
     pub fn get(&self) -> usize {
-        self.inner.get_inner_width()
+        self.inner.data().inner_width() as _
     }
     /// set width of current window, return `false` if failed to run
     #[inline]
     pub fn set(&self, width: usize) -> bool {
-        self.inner.set_inner_width(width)
+        self.inner.data().set_inner_width(width).is_some()
     }
     /// get layout of current window, return `false` if failed to run
     #[inline]

@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 use super::*;
 
 pub struct WindowSizeData {
@@ -8,7 +9,7 @@ pub struct WindowSizeData {
 
 impl Default for WindowSizeData {
     fn default() -> Self {
-        Self { window: None, default_x: 0.0, default_y: 0.0 }
+        Self { window: None, default_x: 375.0, default_y: 812.0 }
     }
 }
 
@@ -58,7 +59,7 @@ impl WindowSizeData {
 
 impl WindowSizeData {
     #[inline]
-    pub fn new(&self, window: Option<Window>, default_size: (f64, f64)) -> Rc<RefCell<Self>> {
+    pub fn new(window: Option<Window>, default_size: (f64, f64)) -> Rc<RefCell<Self>> {
         let default = match window.as_ref() {
             None => default_size,
             Some(s) => get_size(s).unwrap_or(default_size),
@@ -66,16 +67,28 @@ impl WindowSizeData {
         Rc::new(RefCell::new(Self { window, default_x: default.0, default_y: default.1 }))
     }
     #[inline]
-    pub fn width(&self) -> f64 {
+    pub fn inner_width(&self) -> f64 {
         self.get_inner_width().unwrap_or(self.default_x)
     }
     #[inline]
-    pub fn height(&self) -> f64 {
+    pub fn inner_height(&self) -> f64 {
         self.get_inner_height().unwrap_or(self.default_y)
     }
     #[inline]
-    pub fn aspect_radio(&self) -> f64 {
-        self.width() / self.height()
+    pub fn outer_width(&self) -> f64 {
+        self.get_inner_width().unwrap_or(self.default_x)
+    }
+    #[inline]
+    pub fn outer_height(&self) -> f64 {
+        self.get_inner_height().unwrap_or(self.default_y)
+    }
+    #[inline]
+    pub fn inner_aspect_radio(&self) -> f64 {
+        self.inner_width() / self.inner_height()
+    }
+    #[inline]
+    pub fn outer_aspect_radio(&self) -> f64 {
+        self.outer_width() / self.outer_height()
     }
 }
 
