@@ -1,5 +1,7 @@
 #![allow(dead_code)]
+
 use super::*;
+use web_sys::Element;
 
 pub struct WindowSizeData {
     window: Option<Window>,
@@ -54,6 +56,18 @@ impl WindowSizeData {
     #[inline]
     pub fn resize_outer_delta(&self, x: i32, y: i32) -> Option<()> {
         self.window.as_ref()?.resize_by(x, y).ok()
+    }
+    #[inline]
+    pub fn fullscreen_element(&self) -> Option<Element> {
+        self.window.as_ref()?.document()?.fullscreen_element()
+    }
+    #[inline]
+    pub fn fullscreen_toggle(&self) -> Option<Element> {
+        self.window.as_ref()?.document()?.fullscreen()
+    }
+    #[inline]
+    pub fn fullscreen_set(&self, state: bool) -> Option<Element> {
+        self.window.as_ref()?.document()?.fullscreen_element()
     }
 }
 

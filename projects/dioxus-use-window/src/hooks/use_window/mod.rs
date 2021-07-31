@@ -47,37 +47,28 @@ impl UseWindow {
         let listener = Self::on_window_resize(cx, &window, &data);
         Some(Self { data, listen_window: Some(listener) })
     }
-    fn new_ssr(cx: &ScopeState, config: &UseWindowBuilder) -> Self {
-        warn!("Window Resize Listener Initializing failed at {}!", cx.scope_id().0);
+    fn new_ssr(_: &ScopeState, config: &UseWindowBuilder) -> Self {
+        info!("Window Resize Listener Initializing failed, using ssr mode now.");
         let data = WindowSizeData::new(None, (config.missing_x as _, config.missing_y as _));
         Self { data, listen_window: None }
     }
-    #[allow(unused_variables)]
-    fn on_window_resize(cx: &ScopeState, window: &Window, data: &Rc<RefCell<WindowSizeData>>) -> EventListener {
+    fn on_window_resize(cx: &ScopeState, window: &Window, _: &Rc<RefCell<WindowSizeData>>) -> EventListener {
         #[cfg(debug_assertions)]
         {
             info!("Windows Resize Listener Initialized at {}!", cx.scope_id().0);
         }
         let regenerate = cx.schedule_update();
-        // let setter = data.clone();
         EventListener::new(window, "resize", move |_| {
-            // let mut setter = setter.borrow_mut();
-            // if let Some(size) = get_size() {
-            // setter.x = size.0;
-            // setter.y = size.1;
-            // regenerate();
-            // }
             regenerate();
         })
+    }
+    #[inline]
+    pub(crate) fn data_ref(&self) -> Ref<WindowSizeData> {
+        self.data.borrow()
     }
 }
 
 impl UseWindow {
-    /// get width of current window
-    #[inline]
-    pub(crate) fn data(&self) -> Ref<WindowSizeData> {
-        self.data.borrow()
-    }
     /// get height of current window
     ///
     /// **read-only**
@@ -112,43 +103,6 @@ impl UseWindow {
     {
         let w = self.data.borrow().inner_width() as usize;
         T::from(w)
-    }
-}
-
-impl UseWindow {
-    /// get size of current browser
-    #[inline]
-    pub fn browser_size(&self) -> (usize, usize) {
-        (self.width(), self.height())
-    }
-    /// get width of current browser
-    ///
-    /// **read-only**
-    #[inline]
-    pub fn browser_width(&self) -> usize {
-        self.data.borrow().outer_width() as usize
-    }
-    /// get height of current window
-    ///
-    /// **read-only**
-    #[inline]
-    pub fn browser_height(&self) -> usize {
-        self.data.borrow().outer_height() as usize
-    }
-    /// get aspect radio of current window
-    #[inline]
-    pub fn browser_aspect_radio(&self) -> f64 {
-        self.data.borrow().outer_aspect_radio()
-    }
-    /// get height of current window
-    #[inline]
-    pub fn browser_size_set(&self, size: (usize, usize)) -> bool {
-        self.data.borrow().resize_outer_size(size.0 as _, size.1 as _).is_some()
-    }
-    /// get height of current window
-    #[inline]
-    pub fn browser_size_delta(&self, size: (i32, i32)) -> bool {
-        self.data.borrow().resize_outer_delta(size.0, size.1).is_some()
     }
 }
 

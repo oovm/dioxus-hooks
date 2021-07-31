@@ -1,5 +1,7 @@
 #![allow(non_snake_case)]
 mod builder;
+mod use_browser;
+// mod use_full_screen;
 mod use_height;
 mod use_layout;
 mod use_width;
@@ -13,7 +15,7 @@ pub use self::{
 use crate::ResponsiveLayout;
 use dioxus::core::ScopeState;
 use gloo_events::EventListener;
-use log::{info, warn};
+use log::info;
 use std::{
     cell::{Ref, RefCell},
     fmt::{Debug, Display, Formatter},
