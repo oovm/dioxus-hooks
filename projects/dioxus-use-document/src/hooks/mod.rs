@@ -1,6 +1,7 @@
 mod builder;
 mod use_charset;
 mod use_document;
+mod use_scroll;
 mod use_title;
 
 pub use self::{builder::UseDocumentBuilder, use_charset::UseCharacterSet, use_document::UseDocument, use_title::UseTitle};

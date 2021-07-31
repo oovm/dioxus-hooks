@@ -1,4 +1,5 @@
 mod display;
+
 use super::*;
 
 /// Window height effect handler
@@ -78,20 +79,20 @@ impl UseBrowser {
 
 impl UseBrowser {
     #[inline]
-    pub fn is_fullscreen(&self) -> (usize, usize) {
-        (self.toggle(), self.height())
+    pub fn is_fullscreen(&self) -> bool {
+        self.inner.data_ref().fullscreen_element().is_some()
     }
     /// get width of current browser
     #[inline]
-    pub fn fullscreen_toggle(&self) -> usize {
-        self.inner.data_ref().fullscreen_toggle()
+    pub fn fullscreen_toggle(&self) -> bool {
+        self.inner.data_ref().fullscreen_toggle().is_some()
     }
     #[inline]
-    pub fn fullscreen_on(&self) -> usize {
-        self.inner.data_ref().outer_width() as usize
+    pub fn fullscreen_on(&self) -> bool {
+        self.inner.data_ref().fullscreen_set(true).is_some()
     }
     #[inline]
-    pub fn fullscreen_off(&self) -> usize {
-        self.inner.data_ref().outer_width() as usize
+    pub fn fullscreen_off(&self) -> bool {
+        self.inner.data_ref().fullscreen_set(false).is_some()
     }
 }

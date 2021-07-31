@@ -6,7 +6,8 @@ mod display;
 /// Window size effect handler
 pub struct UseWindow {
     data: Rc<RefCell<WindowSizeData>>,
-    listen_window: Option<EventListener>,
+    listen_window_resize: Option<EventListener>,
+    listen_fullscreen: Option<EventListener>,
 }
 
 impl UseWindowBuilder {
@@ -44,13 +45,14 @@ impl UseWindow {
     fn new(cx: &ScopeState, config: &UseWindowBuilder) -> Option<Self> {
         let data = WindowSizeData::new(window(), (config.missing_x as _, config.missing_y as _));
         let window = window()?;
-        let listener = Self::on_window_resize(cx, &window, &data);
-        Some(Self { data, listen_window: Some(listener) })
+        let listen_window_resize = Self::on_window_resize(cx, &window, &data);
+        let listen_fullscreen = Self::on_fullscreen_change(cx, &window, &data);
+        Some(Self { data, listen_window_resize: Some(listen_window_resize), listen_fullscreen: Some(listen_fullscreen) })
     }
     fn new_ssr(_: &ScopeState, config: &UseWindowBuilder) -> Self {
         info!("Window Resize Listener Initializing failed, using ssr mode now.");
         let data = WindowSizeData::new(None, (config.missing_x as _, config.missing_y as _));
-        Self { data, listen_window: None }
+        Self { data, listen_window_resize: None, listen_fullscreen: None }
     }
     fn on_window_resize(cx: &ScopeState, window: &Window, _: &Rc<RefCell<WindowSizeData>>) -> EventListener {
         #[cfg(debug_assertions)]
@@ -59,6 +61,16 @@ impl UseWindow {
         }
         let regenerate = cx.schedule_update();
         EventListener::new(window, "resize", move |_| {
+            regenerate();
+        })
+    }
+    fn on_fullscreen_change(cx: &ScopeState, window: &Window, _: &Rc<RefCell<WindowSizeData>>) -> EventListener {
+        #[cfg(debug_assertions)]
+        {
+            info!("Full Screen Listener Initialized at {}!", cx.scope_id().0);
+        }
+        let regenerate = cx.schedule_update();
+        EventListener::new(window, "fullscreenchange", move |_| {
             regenerate();
         })
     }

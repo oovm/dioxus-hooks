@@ -9,8 +9,8 @@ mod use_window;
 
 use self::use_window::data::*;
 pub use self::{
-    builder::UseWindowBuilder, use_height::UseWindowHeight, use_layout::UseWindowLayout, use_width::UseWindowWidth,
-    use_window::UseWindow,
+    builder::UseWindowBuilder, use_browser::UseBrowser, use_height::UseWindowHeight, use_layout::UseWindowLayout,
+    use_width::UseWindowWidth, use_window::UseWindow,
 };
 use crate::ResponsiveLayout;
 use dioxus::core::ScopeState;
@@ -152,4 +152,29 @@ where
 #[inline]
 pub fn use_responsive_layout(cx: &ScopeState) -> &UseWindowLayout<ResponsiveLayout> {
     UseWindowBuilder::default().use_responsive_layout(cx)
+}
+
+/// hooks for window's size
+///
+/// # Arguments
+///
+/// returns: [`UseBrowser`]
+///
+/// # Examples
+///
+/// ```
+/// use dioxus::prelude::*;
+/// use dioxus_use_window::use_browser;
+///
+/// fn App(cx: Scope) -> Element {
+///     let size = use_browser(&cx);
+///
+///     cx.render(rsx!(
+///         h1 { "Window size: {size}" }
+///     ))
+/// }
+/// ```
+#[inline]
+pub fn use_browser(cx: &ScopeState) -> &UseBrowser {
+    UseWindowBuilder::default().use_browser(cx)
 }

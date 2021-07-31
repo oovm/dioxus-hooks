@@ -62,12 +62,25 @@ impl WindowSizeData {
         self.window.as_ref()?.document()?.fullscreen_element()
     }
     #[inline]
-    pub fn fullscreen_toggle(&self) -> Option<Element> {
-        self.window.as_ref()?.document()?.fullscreen()
+    pub fn fullscreen_toggle(&self) -> Option<()> {
+        let doc = &self.window.as_ref()?.document()?;
+        if !doc.fullscreen_enabled() {
+            return None;
+        }
+        self.fullscreen_set(doc.fullscreen_element().is_none());
+        Some(())
     }
     #[inline]
-    pub fn fullscreen_set(&self, state: bool) -> Option<Element> {
-        self.window.as_ref()?.document()?.fullscreen_element()
+    pub fn fullscreen_set(&self, state: bool) -> Option<()> {
+        let doc = &self.window.as_ref()?.document()?;
+        if !doc.fullscreen_enabled() {
+            return None;
+        }
+        match state {
+            true => doc.body()?.request_fullscreen().ok()?,
+            false => self.window.as_ref()?.document()?.exit_fullscreen(),
+        }
+        return Some(());
     }
 }
 
