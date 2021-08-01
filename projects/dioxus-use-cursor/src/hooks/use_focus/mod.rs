@@ -29,6 +29,7 @@ impl UseFocused {
             setter.hover = true;
             regenerate()
         });
+
         let setter = data.clone();
         let listen_mouse_out = EventListener::new(target, "mouseout", move |_| {
             let mut setter = setter.borrow_mut();

@@ -1,7 +1,8 @@
 mod display;
 
 use super::*;
-use web_sys::Window;
+use dioxus::events::PointerData;
+use web_sys::{Event, PointerEvent};
 
 /// effect handler
 pub struct UseCursor {
@@ -10,27 +11,60 @@ pub struct UseCursor {
 }
 
 struct UseCursorData {
-    mouse: MouseData,
+    pointer: PointerData,
+}
+
+impl UseCursorBuilder {
+    /// hooks for window's size with config
+    ///
+    /// # Arguments
+    ///
+    /// * `cx`: [`Scope`] or [`ScopeState`]
+    ///
+    /// returns: [`WindowSize`]
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use dioxus::prelude::*;
+    /// use dioxus_use_cursor::use_cursor;
+    ///
+    /// fn App(cx: Scope) -> Element {
+    ///     let size = use_cursor(&cx);
+    ///
+    ///     cx.render(rsx!(
+    ///         h1 { "Window size: {size}" }
+    ///     ))
+    /// }
+    /// ```
+    pub fn use_cursor<'a>(&self, cx: &'a ScopeState) -> &'a mut UseCursor {
+        let hook = UseCursor::new(cx);
+        cx.use_hook(|_| hook)
+    }
 }
 
 impl UseCursor {
-    pub(crate) fn new(cx: &ScopeState) -> Option<Self> {
-        let window = window()?;
-        let data = Rc::new(RefCell::new(UseCursorData::default()));
-        let mouse_move = Self::on_mouse_move(cx, &window, &data);
-        Some(Self { data, listen_mouse_move: Some(mouse_move) })
+    fn new(cx: &ScopeState) -> Self {
+        match window() {
+            None => Default::default(),
+            Some(w) => {
+                let data = Rc::new(RefCell::new(UseCursorData::default()));
+                let mouse_move = Self::on_pointer_move(cx, &w, &data);
+                Self { data, listen_mouse_move: Some(mouse_move) }
+            }
+        }
     }
-    fn on_mouse_move(cx: &ScopeState, window: &Window, data: &Rc<RefCell<UseCursorData>>) -> EventListener {
+    fn on_pointer_move(cx: &ScopeState, window: &Window, data: &Rc<RefCell<UseCursorData>>) -> EventListener {
         #[cfg(debug_assertions)]
         {
-            info!("Window Mouse move Listener Initialized at {}!", cx.scope_id().0);
+            info!("Pointer Move Listener Initialized at {}!", cx.scope_id().0);
         }
         let setter = data.clone();
         let regenerate = cx.schedule_update();
-        EventListener::new(&window, "mousemove", move |e| {
+        EventListener::new(&window, "pointermove", move |e| {
             let mut setter = setter.borrow_mut();
-            let e: &MouseEvent = e.unchecked_ref();
-            setter.mouse = MouseData {
+            let e: &PointerEvent = e.unchecked_ref();
+            setter.pointer = PointerData {
                 alt_key: e.alt_key(),
                 button: e.button(),
                 buttons: e.buttons(),
@@ -43,6 +77,16 @@ impl UseCursor {
                 screen_x: e.screen_x(),
                 screen_y: e.screen_y(),
                 shift_key: e.shift_key(),
+                pointer_id: e.pointer_id(),
+                width: e.width(),
+                height: e.height(),
+                pressure: e.pressure(),
+                tangential_pressure: e.tangential_pressure(),
+                tilt_x: e.tilt_x(),
+                tilt_y: e.tilt_y(),
+                twist: e.twist(),
+                pointer_type: e.pointer_type(),
+                is_primary: e.is_primary(),
             };
             regenerate();
         })
@@ -52,11 +96,11 @@ impl UseCursor {
 impl UseCursor {
     /// Getter for the screenX field of this object.
     pub fn screen_x(&self) -> usize {
-        self.data.borrow().mouse.screen_x as _
+        self.data.borrow().pointer.screen_x as _
     }
     ///
     pub fn screen_y(&self) -> usize {
-        self.data.borrow().mouse.screen_y as _
+        self.data.borrow().pointer.screen_y as _
     }
     ///
     // pub fn element_width(&self) -> usize {

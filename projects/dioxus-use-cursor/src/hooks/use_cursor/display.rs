@@ -1,5 +1,4 @@
 use super::*;
-use std::fmt::{Debug, Display, Formatter};
 
 impl Default for UseCursor {
     fn default() -> Self {
@@ -10,7 +9,7 @@ impl Default for UseCursor {
 impl Default for UseCursorData {
     fn default() -> Self {
         Self {
-            mouse: MouseData {
+            pointer: PointerData {
                 alt_key: false,
                 button: 0,
                 buttons: 0,
@@ -23,6 +22,16 @@ impl Default for UseCursorData {
                 screen_x: 0,
                 screen_y: 0,
                 shift_key: false,
+                pointer_id: 0,
+                width: 0,
+                height: 0,
+                pressure: 0.0,
+                tangential_pressure: 0.0,
+                tilt_x: 0,
+                tilt_y: 0,
+                twist: 0,
+                pointer_type: "".to_string(),
+                is_primary: false,
             },
         }
     }
@@ -31,7 +40,7 @@ impl Default for UseCursorData {
 impl Debug for UseCursor {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("UseCursor")
-            .field("mouse_data", &self.data.borrow().mouse)
+            .field("mouse_data", &self.data.borrow().pointer)
             .field("listen_mouse_move", &self.listen_mouse_move.is_some())
             .finish()
     }
