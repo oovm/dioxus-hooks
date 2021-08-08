@@ -7,7 +7,10 @@
 .idea/
 *.iml
 
+
 # Rust
 target/
 Cargo.lock
 dist/
+time-travel.*
+*.nb

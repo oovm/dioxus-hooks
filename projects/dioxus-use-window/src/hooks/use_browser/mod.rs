@@ -78,6 +78,7 @@ impl UseBrowser {
 }
 
 impl UseBrowser {
+    /// check if is full screen
     #[inline]
     pub fn is_fullscreen(&self) -> bool {
         self.inner.data_ref().fullscreen_element().is_some()
@@ -87,10 +88,12 @@ impl UseBrowser {
     pub fn fullscreen_toggle(&self) -> bool {
         self.inner.data_ref().fullscreen_toggle().is_some()
     }
+    /// set full screen on
     #[inline]
     pub fn fullscreen_on(&self) -> bool {
         self.inner.data_ref().fullscreen_set(true).is_some()
     }
+    /// set full screen off
     #[inline]
     pub fn fullscreen_off(&self) -> bool {
         self.inner.data_ref().fullscreen_set(false).is_some()
