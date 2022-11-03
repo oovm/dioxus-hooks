@@ -10,13 +10,13 @@ license = "MPL-2.0"
 edition = "2021"
 
 [dependencies]
-dioxus = "0.1.8"
-gloo-events = "0.1.1"
-log = "0.4.14"
+dioxus = "0.2.4"
+gloo-events = "0.1.2"
+log = "0.4.17"
 #futures = "0.3.21"
 
 [dependencies.web-sys]
-version = "0.3.56"
+version = "0.3.57"
 features = [
     "Window", "Element", "Navigator",
     "Document", "DocumentType",
