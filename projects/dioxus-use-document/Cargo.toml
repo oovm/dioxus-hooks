@@ -1,6 +1,6 @@
 [package]
 name = "dioxus-use-document"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Aster <192607617@qq.com>"]
 description = "`use_head` hooks for dioxus"
 repository = "https://github.com/oovm/dioxus-hooks"

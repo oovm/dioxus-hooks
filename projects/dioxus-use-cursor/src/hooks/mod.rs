@@ -5,7 +5,7 @@ mod use_hover;
 // mod use_focus;
 // mod use_hovering;
 pub use self::{builder::UseCursorBuilder, use_cursor::UseCursor, use_hover::UseHover};
-use dioxus::{core::ScopeState, events::MouseData};
+use dioxus::core::ScopeState;
 use gloo_events::EventListener;
 use log::info;
 use std::{
@@ -14,7 +14,7 @@ use std::{
     rc::Rc,
 };
 use wasm_bindgen::JsCast;
-use web_sys::{window, EventTarget, MouseEvent, Window};
+use web_sys::{window, EventTarget, Window};
 
 /// hooks for window's size
 ///

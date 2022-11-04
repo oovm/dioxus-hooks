@@ -12,18 +12,18 @@ impl Default for UseDocumentBuilder {
 impl UseDocumentBuilder {
     pub fn use_document<'a>(&self, cx: &'a ScopeState) -> &'a mut UseDocument {
         let hook = UseDocument::new(cx).unwrap();
-        cx.use_hook(|_| hook)
+        cx.use_hook(|| hook)
     }
     pub fn use_title<'a>(&self, cx: &'a ScopeState) -> &'a mut UseTitle {
         let hook = UseTitle::new(cx).unwrap();
-        cx.use_hook(|_| hook)
+        cx.use_hook(|| hook)
     }
     pub fn use_charset<'a>(&self, cx: &'a ScopeState) -> &'a mut UseCharacterSet {
         let hook = UseCharacterSet::new(cx).unwrap();
-        cx.use_hook(|_| hook)
+        cx.use_hook(|| hook)
     }
     pub fn use_html_lang<'a>(&self, cx: &'a ScopeState) -> &'a mut UseHtmlLanguage {
         let hook = UseHtmlLanguage::new(cx).unwrap();
-        cx.use_hook(|_| hook)
+        cx.use_hook(|| hook)
     }
 }

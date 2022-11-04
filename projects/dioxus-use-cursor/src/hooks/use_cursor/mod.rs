@@ -2,7 +2,7 @@ mod display;
 
 use super::*;
 use dioxus::events::PointerData;
-use web_sys::{Event, PointerEvent};
+use web_sys::PointerEvent;
 
 /// effect handler
 pub struct UseCursor {
@@ -39,7 +39,7 @@ impl UseCursorBuilder {
     /// ```
     pub fn use_cursor<'a>(&self, cx: &'a ScopeState) -> &'a mut UseCursor {
         let hook = UseCursor::new(cx);
-        cx.use_hook(|_| hook)
+        cx.use_hook(|| hook)
     }
 }
 

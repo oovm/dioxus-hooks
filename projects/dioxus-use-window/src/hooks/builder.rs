@@ -39,7 +39,7 @@ impl UseWindowBuilder {
     /// ```
     pub fn use_width<'a>(&self, cx: &'a ScopeState) -> &'a mut UseWindowWidth {
         let hook = UseWindowWidth::new(self.use_window_hook(cx));
-        cx.use_hook(|_| hook)
+        cx.use_hook(|| hook)
     }
 
     /// hooks for window's layout with config
@@ -67,7 +67,7 @@ impl UseWindowBuilder {
         T: 'static,
     {
         let hook = UseWindowLayout::new(self.use_window_hook(cx));
-        cx.use_hook(|_| hook)
+        cx.use_hook(|| hook)
     }
     /// hooks for window's responsive layout with config
     ///

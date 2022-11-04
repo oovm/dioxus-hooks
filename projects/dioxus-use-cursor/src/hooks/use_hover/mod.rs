@@ -39,7 +39,7 @@ impl UseCursorBuilder {
     /// ```
     pub fn use_hover<'a>(&self, cx: &'a ScopeState) -> &'a mut UseHover {
         let hook = UseHover::new(cx, todo!());
-        cx.use_hook(|_| hook)
+        cx.use_hook(|| hook)
     }
 }
 

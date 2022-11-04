@@ -9,7 +9,6 @@ pub use self::{
     use_title::UseTitle,
 };
 use dioxus::core::ScopeState;
-use gloo_events::EventListener;
 use std::{cell::RefCell, rc::Rc};
 use web_sys::{window, Document, Element};
 

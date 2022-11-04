@@ -1,6 +1,6 @@
 [package]
 name = "dioxus-use-cursor"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["Aster <192607617@qq.com>"]
 description = "`use_cursor` hooks for dioxus"
 repository = "https://github.com/oovm/dioxus-hooks"

@@ -1,4 +1,3 @@
-Rust Template Project
-=====================
+Hooks for dioxus
+================
 
-Rust template project for monorepo

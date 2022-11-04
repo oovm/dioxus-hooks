@@ -32,7 +32,7 @@ impl UseStorageBuilder {
     /// ```
     pub fn use_local_storage<'a>(&self, cx: &'a ScopeState) -> &'a mut UseLocalStorage {
         let hook = UseLocalStorage::new(cx);
-        cx.use_hook(|_| hook)
+        cx.use_hook(|| hook)
     }
 }
 

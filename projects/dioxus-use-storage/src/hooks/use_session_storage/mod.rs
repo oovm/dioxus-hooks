@@ -34,7 +34,7 @@ impl UseStorageBuilder {
     /// ```
     pub fn use_session_storage<'a>(&self, cx: &'a ScopeState) -> &'a mut UseSessionStorage {
         let hook = UseSessionStorage::new(cx);
-        cx.use_hook(|_| hook)
+        cx.use_hook(|| hook)
     }
 }
 

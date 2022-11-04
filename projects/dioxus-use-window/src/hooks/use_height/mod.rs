@@ -31,7 +31,7 @@ impl UseWindowBuilder {
     #[inline]
     pub fn use_height<'a>(&self, cx: &'a ScopeState) -> &'a mut UseWindowHeight {
         let hook = UseWindowHeight::new(self.use_window_hook(cx));
-        cx.use_hook(|_| hook)
+        cx.use_hook(|| hook)
     }
 }
 

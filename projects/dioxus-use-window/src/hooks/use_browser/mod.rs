@@ -32,7 +32,7 @@ impl UseWindowBuilder {
     #[inline]
     pub fn use_browser<'a>(&self, cx: &'a ScopeState) -> &'a mut UseBrowser {
         let hook = UseBrowser::new(self.use_window_hook(cx));
-        cx.use_hook(|_| hook)
+        cx.use_hook(|| hook)
     }
 }
 

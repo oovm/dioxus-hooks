@@ -33,7 +33,7 @@ impl UseWindowBuilder {
     /// ```
     pub fn use_window<'a>(&self, cx: &'a ScopeState) -> &'a mut UseWindow {
         let hook = self.use_window_hook(cx);
-        cx.use_hook(|_| hook)
+        cx.use_hook(|| hook)
     }
     #[inline]
     pub(crate) fn use_window_hook(&self, cx: &ScopeState) -> UseWindow {

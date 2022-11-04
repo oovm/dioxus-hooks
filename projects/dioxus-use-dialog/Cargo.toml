@@ -1,6 +1,6 @@
 [package]
 name = "dioxus-use-dialog"
-version = "0.1.1"
+version = "0.2.0"
 authors = ["Aster <192607617@qq.com>"]
 description = "`use_dialog` hooks for dioxus"
 repository = "https://github.com/oovm/dioxus-hooks"
