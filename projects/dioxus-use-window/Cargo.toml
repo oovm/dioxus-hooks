@@ -10,13 +10,13 @@ license = "MPL-2.0"
 edition = "2021"
 
 [dependencies]
-dioxus = "0.2.4"
+dioxus = "0.3.2"
 gloo-events = "0.1.2"
 log = "0.4.17"
-wasm-bindgen = "0.2.80"
+wasm-bindgen = "0.2.84"
 
 [dependencies.web-sys]
-version = "0.3.57"
+version = "0.3.61"
 features = ["Window", "Document", "Element", "HtmlElement"]
 
 
