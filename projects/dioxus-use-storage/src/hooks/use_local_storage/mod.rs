@@ -41,14 +41,14 @@ impl UseLocalStorage {
         match Self::try_new(cx) {
             Some(s) => s,
             None => {
-                warn!("Window Storage Listener Initializing failed at {}!", cx.scope_id().0);
+                warn!("Local Storage Listener Initializing failed at {}!", cx.scope_id().0);
                 Self::default()
             }
         }
     }
     fn try_new(cx: &ScopeState) -> Option<Self> {
         let window = window()?;
-        let storage = window.session_storage().ok()??;
+        let storage = window.local_storage().ok()??;
         let data = UseStorageData::new(Some(storage));
         let listen_storage = on_storage(cx, &window, &data);
         Some(Self { data, listen_storage: Some(listen_storage) })
