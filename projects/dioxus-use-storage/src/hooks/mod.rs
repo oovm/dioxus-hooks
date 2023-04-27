@@ -20,11 +20,11 @@ use wasm_bindgen::JsCast;
 use web_sys::{window, Storage, StorageEvent, Window};
 use crate::UseStorageBuilder;
 
-/// hooks for window's size with config
+/// A hook for handle local storage
 ///
 /// # Arguments
 ///
-/// returns: [`WindowSize`]
+/// returns: [`UseLocalStorage`]
 ///
 /// # Examples
 ///
@@ -45,7 +45,7 @@ pub fn use_local_storage(cx: &ScopeState) -> &UseLocalStorage {
     UseStorageBuilder::default().use_local_storage(cx)
 }
 
-/// hooks for window's size with config
+/// A hook for handle session storage
 ///
 /// # Arguments
 ///
