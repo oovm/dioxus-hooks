@@ -10,7 +10,7 @@ pub fn TestLocalStorage(cx: Scope) -> Element {
     let hook = use_local_storage(&cx);
     cx.render(rsx!(
         h2 {
-            "Test for `use_local_storage`"
+            "Test for `local_storage`"
         }
         div {
             style : "white-space:pre",
@@ -23,7 +23,7 @@ pub fn TestSessionStorage(cx: Scope) -> Element {
 
     cx.render(rsx!(
         h2 {
-            "Test for `use_session_storage`"
+            "Test for `session_storage`"
         }
         div {
             style : "white-space:pre",

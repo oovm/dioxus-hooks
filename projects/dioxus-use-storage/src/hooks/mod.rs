@@ -1,13 +1,12 @@
 #![allow(non_snake_case)]
 
-mod builder;
-mod storage_iter;
-mod use_local_storage;
-mod use_session_storage;
+pub mod builder;
+pub mod storage_iter;
+pub mod local_storage;
+pub mod session_storage;
 
+use crate::{StorageIter, UseLocalStorage, UseSessionStorage};
 use self::storage_iter::{on_storage, UseStorageData};
-pub use self::{builder::UseStorageBuilder, storage_iter::StorageIter, use_local_storage::UseLocalStorage};
-use crate::hooks::use_session_storage::UseSessionStorage;
 use dioxus::core::ScopeState;
 use gloo_events::EventListener;
 use log::{info, warn};
@@ -19,6 +18,7 @@ use std::{
 };
 use wasm_bindgen::JsCast;
 use web_sys::{window, Storage, StorageEvent, Window};
+use crate::UseStorageBuilder;
 
 /// hooks for window's size with config
 ///
